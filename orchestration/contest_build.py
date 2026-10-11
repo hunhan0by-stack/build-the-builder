@@ -109,7 +109,7 @@ def verify_provider_graph(expected, actual):
                 and path[2:] == ('terminal', 'function')):
             node = expected.get(path[0], {}).get(path[1], {})
             return (node.get('node_type') == 'end_call'
-                and left.get('name') == 'end_call'
+                and left.get('name') in ('end_call',node.get('name'))
                 and left.get('handler') == '__function__:end_call'
                 and left.get('parameters') == {'type': 'object', 'properties': {
                     'message_mode': {'type': 'string', 'default': 'none'}}})
@@ -152,7 +152,7 @@ def validate_workflow(workflow, contract):
     all_nodes = {**nodes, **globals_}
     if workflow.get('initial_node') not in nodes or not nodes or len(all_nodes) > 180:
         raise FoundationError('CONTEST_GRAPH_INITIAL_NODE_INVALID')
-    endpoints = {op.url: op for op in contract.operations.values()}
+    endpoints = {(op.url, op.method): op for op in contract.operations.values()}
     used = set()
 
     def check_code(code):
@@ -188,7 +188,7 @@ def validate_workflow(workflow, contract):
         if handler == '__function__:api_call':
             fields = function.get('parameters', {}).get('properties', {})
             endpoint = fields.get('url', {}).get('default')
-            operation = endpoints.get(endpoint)
+            operation = endpoints.get((endpoint, fields.get('method', {}).get('default')))
             if operation is None or fields.get('method', {}).get('default') != operation.method:
                 raise FoundationError('CONTEST_TOOL_ENDPOINT_MISMATCH')
             if value.get('config', {}).get('maxRetries', 0) != 0:
@@ -230,7 +230,7 @@ def validate_workflow(workflow, contract):
         for key in ('passthrough_default_transition', 'max_turn_transition'):
             if node.get(key) and node[key] not in all_nodes:
                 raise FoundationError('CONTEST_TRANSITION_TARGET_INVALID')
-    if not {'verify_identity', 'get_account', 'create_promise', 'close_call'} <= used:
+    if not getattr(contract, 'required_operations', {'verify_identity', 'get_account', 'create_promise', 'close_call'}) <= used:
         raise FoundationError('CONTEST_REQUIRED_BANK_TOOLS_MISSING')
     from builder.freya_export import measure_code_exec_budget
     code_budget=measure_code_exec_budget(workflow)
@@ -280,6 +280,10 @@ class FreyaClient:
 
     def api(self, method, path, body=None, **params):
         timeout = min(120, self.budget.remaining())
+        # Full call transcripts include a workflow snapshot for each event.
+        response_limit = (8_000_000 if method == 'GET' and re.fullmatch(
+            r'/api/v2/call/[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}', path)
+            else 4_000_000)
         record = {'method': method, 'path': path, 'params': params, 'status': 'REQUEST_STARTED',
                   'request_sha256': digest(raw(body)) if body is not None else None}
         self.trace.append(record)
@@ -297,8 +301,8 @@ class FreyaClient:
         ticket = self.evidence.begin_exchange(method=method, path=path, body=encoded, params=params) if self.evidence else None
         try:
             with self.opener.open(request, timeout=timeout) as response:
-                response_raw = response.read(4_000_001)
-                if len(response_raw) > 4_000_000:
+                response_raw = response.read(response_limit + 1)
+                if len(response_raw) > response_limit:
                     raise ValueError('response too large')
                 if self.evidence:
                     self.evidence.complete_exchange(ticket, http_status=response.status,
@@ -414,8 +418,10 @@ def run(*, brief_path, tool_api_path, directory, provider='bounded', publish_liv
         deadline_seconds=1800, slot=None, model_provider=None, client_factory=FreyaClient,
         practice_case=None, repetitions=1, evidence_factory=None, record_credits=False,
         chat_fixture=None, chat_fixture_sha256=None, chat_authorized=False, chat_evidence_factory=None,
-        behavior_fixture=None):
+        behavior_fixture=None, max_model_attempts=3):
     budget = Budget(deadline_seconds)
+    if type(max_model_attempts) is not int or not 1 <= max_model_attempts <= 3:
+        raise FoundationError('CONTEST_MODEL_ATTEMPT_LIMIT_INVALID')
     directory = Path(directory).resolve()
     if directory.exists() or not directory.is_relative_to(OUTPUT.resolve()) or directory == OUTPUT.resolve():
         raise FoundationError('CONTEST_FRESH_OUTPUT_DIRECTORY_REQUIRED')
@@ -423,6 +429,7 @@ def run(*, brief_path, tool_api_path, directory, provider='bounded', publish_liv
     trace = {'kind': 'contest-builder-run-1', 'run_id': str(uuid.uuid4()),
              'started_at': datetime.now(timezone.utc).isoformat(), 'status': 'STARTED',
              'provider_actions': [], 'tests': [], 'deadline_seconds': deadline_seconds,
+             'model_attempt_limit': max_model_attempts,
              'live_success_verified': False, 'local_behavior_verified': False,
              'final_submission_ready': False}
     try:
@@ -494,7 +501,7 @@ def run(*, brief_path, tool_api_path, directory, provider='bounded', publish_liv
             trace['compilation'] = {'provider': 'codex-cli', 'calls': 0, 'attempts': []}
             feedback = None
             behavior_history = []
-            for attempt in range(3):
+            for attempt in range(max_model_attempts):
                 verify_source_snapshot(trace)
                 model_dir = directory / ('model-attempt-' + str(attempt + 1))
                 model_dir.mkdir()
@@ -568,7 +575,8 @@ def run(*, brief_path, tool_api_path, directory, provider='bounded', publish_liv
                             for row in behavior.get('cases', []) if not row.get('passed')}
                             | ({behavior['diagnostic']} if behavior.get('diagnostic') else set()))
                     write(model_dir / 'diagnostics.json', feedback['diagnostics'])
-                    if attempt == 2:
+                    if attempt + 1 == max_model_attempts:
+                        trace['compilation']['attempt_limit_reached'] = True
                         raise
         else:
             raise FoundationError('CONTEST_PROVIDER_INVALID')
@@ -707,6 +715,8 @@ def main(argv=None):
     parser.add_argument('--chat-fixture',type=Path,help='Explicitly requested new text-chat test using an organizer-supplied variables/messages JSON; no practice case.')
     parser.add_argument('--chat-fixture-sha256',help='Independently obtained SHA256 of that official fixture.')
     parser.add_argument('--deadline-seconds', type=int, default=1800)
+    parser.add_argument('--max-model-attempts', type=int, choices=(1, 2, 3), default=3,
+        help='Explicit model-call budget; includes the initial call. Default: 3. Does not accept unresolved output.')
     parser.add_argument('--out', type=Path)
     args = parser.parse_args(argv)
     result = run(brief_path=args.brief_path, tool_api_path=args.tool_api_path,
@@ -714,7 +724,8 @@ def main(argv=None):
         publish_live=args.publish, slot=args.slot, deadline_seconds=args.deadline_seconds,
         practice_case=args.practice_case, repetitions=args.repetitions,record_credits=args.record_credits,
         chat_fixture=args.chat_fixture,chat_fixture_sha256=args.chat_fixture_sha256,
-        chat_authorized=args.chat_fixture is not None, behavior_fixture=args.behavior_fixture)
+        chat_authorized=args.chat_fixture is not None, behavior_fixture=args.behavior_fixture,
+        max_model_attempts=args.max_model_attempts)
     print(json.dumps({'status': result['status'], 'elapsed_seconds': result['elapsed_seconds'],
                       'diagnostic': result.get('diagnostic')}, ensure_ascii=False))
     return 2 if result['status'] == 'BLOCKED' else 0

@@ -11,6 +11,7 @@ dependencies = []
 
 [project.optional-dependencies]
 evidence-protection = ["cryptography==50.0.2"]
+case-documents = ["pdfplumber==0.11.9", "openpyxl==3.1.5"]
 
 [project.scripts]
 builder = "builder.cli:main"

@@ -1,4 +1,59 @@
-# Gizli görev çalıştırma
+# Final çalıştırma ve teslim hazırlığı
+
+## Güncel final sözleşmesi — 11 Ekim 2026
+
+Final tek Türkçe vakadır. Belgeler 20:00'de açılır ve teslim 23:00'ten önce
+tamamlanır (UTC+3; 17:00–20:00 UTC). Güncel resmî sayfada koşu başına
+30 dakika/1.800 saniye sınırı belirtilmiyor; geçmiş koşuların kendi süre
+ölçümleri ve yerel bütçeleri korunur.
+
+Builder, Markdown/Word/PDF/Excel belgelerinin bulunduğu `{case_folder}` klasörünü
+ve `{mock_url}` adresini alır. Kendi Cloudflare Workers banka servisinizi
+verilen servis sözleşmesi ve sentetik test müşterilerinden hazırlayın;
+builder başlamadan deploy edin ve sonuçlar açıklanana kadar açık tutun.
+Final telefon ajanının araçları yalnız bu servisi çağırır. Banka alanları,
+kurallar ve değerler girdi belgelerinden türetilir; builder koduna veya sabit
+promptlara yazılmaz. Genel hata düzeltmesi serbesttir; üretilen ajan elle
+düzenlenmez.
+
+## Belge klasöründen üretim
+
+```text
+python -m pip install -r requirements-case-reader.txt
+python -B builder/build.py {case_folder} {mock_url} --out artifacts/final-builder/fresh-case --max-model-attempts 1
+```
+
+Çıktı dizini yeni olmalıdır. Mock önce yayımlanmış olmalıdır. Komut belgeleri
+okur, kaynak konumlarını ve bütün dosya özetlerini kaydeder, Codex ile üretir ve
+statik denetimden geçen sonucu `agent.workflow.json` olarak yazar. Bu komut
+kendiliğinden Freya yayını veya simülasyon başlatmaz; canlı test ve resmî
+`freya.export_workflow` çıktısı ayrıca doğrulanır.
+
+Kaynak pakette yalnız mock/test verisi olan dosya veya klasörler
+`--reference-only relative/path` ile belirtilir (birden çok kez kullanılabilir).
+Bu dosyalar kaynak özetinde ve yerel okumada korunur, modelin politika girdisine
+alınmaz. BRIEF.md ve README.md bu yöntemle dışlanamaz. Bu roller kaynak paketin
+açıklamasından seçilir; builder içinde banka adına bağlı bir dosya kuralı yoktur.
+
+Her model denemesinde `model-input.txt`, özgün `model-response.json` ve doğrulanmış
+gerçek Codex olay akışı `model-session.jsonl` saklanır. `end-to-end-trace.json`
+kontrol özetidir; teslimde istenen ajan oturum kaydının yerine geçmez. Modelin
+statik kontrolü geçmesi, bankacılık kurallarının veya canlı konuşmanın geçtiği
+anlamına gelmez. Yeni kaynak sürümü için yeni çıktı dizini ve yeni koşu kullanılır.
+
+Varsayılan üretim, çözülmemiş zorunluluk varsa export etmez. Açıkça
+`--allow-partial` seçildiğinde yapısal kontrollerden geçen sınırlı aday
+`LOCAL_PARTIAL_CASE_WORKFLOW_EXPORTED` olarak yazılabilir; tüm açık noktalar
+izde korunur. Bu seçenek kaynak, şema, adres, boyut veya bütünlük kontrollerini
+atlamaz ve anlamsal/canlı başarı onayı vermez. Böyle bir adayın eksik yetkiye
+bağlı işlemleri kapalı kalmalı, kullanılabilir dalları ayrıca test edilmelidir.
+`--repair-from previous-output` aynı belge özeti ve mock adresine bağlı eski
+yanıtı, özgün yanıt hashini doğrulayarak yeni model çağrısına onarım girdisi yapar.
+Eski dosyalar değişmez; yeni koşu kendi oturumunu ve önceki girdinin bağını kaydeder.
+
+Kaynak: https://www.freyavoice.ai/hackathon#submit ve #rules, #faq, #evaluation.
+
+## Mevcut provider kurulumu
 
 Python 3.10+ ve Codex CLI gerekir. Yerel üretim ve Windows varsayılan DPAPI koruması
 standart kütüphane kullanır; isteğe bağlı Fernet korumasının bağımlılığı aşağıdadır.
@@ -17,7 +72,7 @@ varsayılan `medium`dur. Seçilen seviye izde kayıtlıdır. Kapalı `code_mode_
 özelliğinin ölçülmüş tek başlangıç bildirimi yalnız tam özet ve konum eşleşmesiyle
 ayrılır; diğer hata ve araç olayları işlemi durdurur.
 
-## Komut
+## Tarihsel iki dosyalı practice/prova komutu
 
 ```text
 python -B builder/build.py path/to/brief.md path/to/tool_api.json --provider codex
@@ -30,8 +85,8 @@ ayrıca kaynak ve kapsam bilgisiyle modele verilir. Değişmiş veya başka API 
 bu açıklamalar eklenmez; yeni bankanın kuralları kendi belgelerinden üretilir.
 Verilen brief'in açık zorunlulukları bu açıklamalarla geçersiz kılınmaz.
 Dosya özetleri, model girdisi/çıktısı, işlem izi, süre, workflow ve manifest ayrı bir
-`artifacts/final-builder/run-*` klasörüne yazılır. Her belgeye en fazla 1800 saniye
-verilir. Çözülemeyen politikalar, yanlış enum/alanlar ve aşırı büyük çıktılar
+`artifacts/final-builder/run-*` klasörüne yazılır. Bu eski iki dosyalı yolun
+yerel bütçesi en fazla 1800 saniyedir; güncel resmî final sınırı değildir. Çözülemeyen politikalar, yanlış enum/alanlar ve aşırı büyük çıktılar
 işlemi durdurur. İlk model çıktısı kaynak veya biçim kontrolünden geçmezse,
 aynı süre bütçesinde en fazla iki otomatik düzeltme yapılır; her deneme saklanır.
 Modelin kapsam beyanı anlamsal doğruluk kanıtı değildir.
@@ -54,11 +109,10 @@ tanımları yalnız o çalışmanın OpenAPI şemasından oluşturulur. Kod blok
 çalıştırılmadan workflow'a yerleştirilir. Şema, kapsam, biçim ve çözülemeyen politika tanıları birlikte
 otomatik düzeltmeye verilir. Çözülemeyen bir karar teslim için kabul edilmez.
 
-Platforma üretim, yayın ve resmi export için:
+İki dosyalı practice/prova yolunda platform üretimi, yayın ve export örneği:
 
 ```text
-python -B builder/build.py path/to/brief.md path/to/tool_api.json --provider codex --publish --slot final-a
-python -B builder/build.py path/to/second.md path/to/second_api.json --provider codex --publish --slot final-b
+python -B builder/build.py path/to/brief.md path/to/tool_api.json --provider codex --publish --slot practice-review
 ```
 
 Bir brief başka bir belgeyi açıkça temel alıyorsa, gerekli belgeleri başlıkları
@@ -88,8 +142,9 @@ kullanıcı DPAPI profilini gerektirir; koruma hazırlanamıyorsa ilk API çağr
 
 Resmi public practice bankasında ayrıca bir müşteri senaryosu ölçmek için
 `--practice-case PUB-01` eklenebilir. `--repetitions 3`, her tekrar için yeni
-banka oturumu ve ayrı tam kanıt paketi açar; aynı yayımlanmış ajanı üç kere ölçer. Test de 1800 saniyelik
-üretim bütçesinden sayılır. `FREYA_BANK_TEAM_KEY` gerekir. Bir test başarısız
+banka oturumu ve ayrı tam kanıt paketi açar; aynı yayımlanmış ajanı üç kere ölçer.
+Test bu practice yolunun yerel üretim bütçesinden sayılır; bu tekrar sayısı
+güncel finalin açıklanmayan puanlama sözleşmesi yerine geçmez. `FREYA_BANK_TEAM_KEY` gerekir. Bir test başarısız
 olursa veya sonucu belirsizse tekrar döngüsü durur. Başka bir bankanın şemasına
 public practice senaryoları uygulanmaz. Test beklentileri modele verilmez.
 İsteğe bağlı `--record-credits`, her tekrarın başında ve sonunda aynı workspace'in
@@ -97,12 +152,12 @@ kredisini korunan kayıt yoluyla okur. Gözlenen fark yalnız o zaman aralığı
 workspace farkıdır; testin kesin fiyatı değildir. Önceki A provasının kredi tüketimi
 ölçülmemiştir. Bu bayrak olmadan kredi hesabına ek okuma yapılmaz.
 
-Gizli banka için organizatör geçerli müşteri değişkenlerini ve mesajları içeren
-bir test JSON'u verirse, ayrı metin sohbeti kontrolü aynı üretim süre bütçesinde
-çalıştırılabilir:
+Eski iki dosyalı prova yolunda, geçerli müşteri değişkenleri ve mesajları
+içeren uyumlu bir test JSON'u sağlandığında ayrı metin sohbeti kontrolü yerel
+üretim bütçesinde çalıştırılabilir. Bu örnek final klasör komutu değildir:
 
 ```text
-python -B builder/build.py brief.md tool_api.json --provider codex --publish --slot final-a --chat-fixture official-chat.json --chat-fixture-sha256 <independent-sha256>
+python -B builder/build.py brief.md tool_api.json --provider codex --publish --slot practice-review --chat-fixture official-chat.json --chat-fixture-sha256 <independent-sha256>
 ```
 
 Bu seçeneğin çalıştırılması yeni sohbet testi talebidir; önceki PUB-01 test izni
@@ -156,12 +211,23 @@ veya işletim sistemi eski DPAPI kayıtlarını açamaz; hesap profili taşınma
 
 ## Finalde yapılacaklar
 
-Gizli belgeler geldikten sonra iki ayrı üretim çalışması yapılır. Her seçilen
-workflow kendi bankasında canlı test edilir; test sonuçları ve bankadaki gerçek
-kayıtlar teslim izine bağlanır. Kaynak kodun yanı sıra iki resmi provider export,
-iki üretim izi, model bilgileri, test kayıtları ve çalıştırma açıklaması depoda
-yer alır. Son teslimden önce organizatörün güncel gönderim kanalı kontrol edilir.
-Kodda veya promptta gizli görevin banka kuralları elle sabitlenmez.
+Belgeler açılınca BRIEF.md ve belgeleri açıklayan README.md okunur. Kendi
+mock servisi hazırken builder klasör ve servis adresiyle çalıştırılır. Birden
+fazla koşu yapılabilir; yalnız seçilen koşunun düzenlenmemiş telefon ajanı ve
+onu üreten özgün trace teslim edilir. `freya.export_workflow` ile alınan tek
+export ve trace, kaynakla birlikte kesin teslim commit'ine bağlanır.
+
+`submission.json` alanları: `team`, `members` (name/email nesnelerinin listesi),
+`repo`, `commit`, `run_command`, `workflow`, `trace`, `mock_url`. Komut
+`{case_folder}` ve `{mock_url}` girdilerini alır; gerçek komut ve dosya yolları
+seçilen koşudan doğrulanır. Son teslimden önce resmî alıcı/yöntem kontrol edilir.
+
+Trace başlangıç/bitiş zamanını, her model çağrısının modelini ve kısa amacını,
+oluşturulan workflow/agent kimliklerini, step/tool sayısını ve yapılan testlerin
+sonuçlarını göstermelidir. API anahtarları commit edilmez. Trace puanlanmaz;
+ajanın builder çıktısı olduğunu denetlemek için okunur. Gizli müşteri sayısı,
+başarı kriterleri ve ağırlıklar yayımlanmamıştır. En iyi adaylar yeniden
+üretilebilir; model çıktısının bayt bayt aynı olması beklenmez.
 
 11 Ekim 2026: gizli görev açılışı 20:00, son teslim 23:00 (UTC+3).
 Kaynak: https://www.freyavoice.ai/hackathon#submit
@@ -177,17 +243,15 @@ anahtarı kaynak paketine eklenmez. `BUILDER_CODEX_EXECUTABLE`, `BUILDER_CODEX_M
 ve `BUILDER_CODEX_REASONING_EFFORT` isteğe bağlı builder seçimleridir; telefon
 ajanının organizatör tarafından sabitlenen model ayarını değiştirmez.
 
-Telefon ajanını gerçekten üretip yayınlayan iki dosyalı komut:
-
-```text
-python -B builder/build.py "{brief_path}" "{tool_api_path}" --provider codex --publish --deadline-seconds 1800
-```
-
-`--publish` olmadan bu komut yalnız yerel graph üretir. Platform operatörü,
+Jüri komutu final belge klasörünü ve mock adresini almalıdır. Gerçek
+çalıştırılmış CLI, bağımlılıkları ve seçilen export/trace yolları teslim
+commit'inde belgelenir; eski iki dosyalı örnek bu koşulu sağlamış sayılmaz.
+Platform operatörü,
 `FREYA_API_KEY` ve gerekirse `FREYA_WORKSPACE_ID` değerlerini jüri ortamına
 güvenli biçimde sağlar. Public practice testi ayrıca `FREYA_BANK_TEAM_KEY`
-gerektirir; hidden brief'e public vaka taşınmaz. Hidden belgelerle practice
-müşterisi verilmez. Belgelenmiş chat/message testi, geçerli müşteri değişkenleri
+gerektirir; bu anahtar ve public practice senaryoları final komutuna taşınmaz.
+Final ZIP'indeki test müşterileri kendi mock'u içindir; değerlendirme
+müşterileri gizlidir. Belgelenmiş chat/message testi, geçerli müşteri değişkenleri
 ve mesajları içeren açıkça sağlanmış fixture ve ayrı canlı yetki gerektirir.
 
 Varsayılan canlı kanıt koruması Windows current-user DPAPI'dir. Windows dışındaki
@@ -237,9 +301,11 @@ etiketlenmez. Aday yoksa bu testler `NOT_MEASURED` açıklamasıyla atlanır;
 atlanmış test davranış başarısı değildir. Bu scripted Cedar beklentileri başka
 bankanın graph'ına genelleme testi olarak uygulanmaz.
 
-Gerçek `contest-builder-run-1` trace'ini değiştirmeden yerel çift eşleştirme için
+Aşağıdaki eşleştirme eski iki girdili prova biçimi içindir; yeni final
+klasörü/tek workflow sözleşmesi için ayrıca uyarlanıp doğrulanmalıdır.
+Gerçek `contest-builder-run-1` trace'ini değiştirmeden tarihsel yerel eşleştirme için
 `orchestration.final_run_pairing --trace-format contest` kullanılır. Bağımsız
-reviewer selection'ı iki resmî hidden girdi, kesin commit/runtime özetleri,
+reviewer selection'ı bu eski arayüzün brief/API girdilerini, kesin commit/runtime özetlerini,
 original trace/manifest/FINAL/girdi/graph/export özetleri ve seçilen yayın
 kimliklerini açıkça seçmelidir. Selection'ın hash'i ayrıca bağımsız alınır.
 

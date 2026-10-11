@@ -1,0 +1,26 @@
+{
+  "kind": "jury-portable-launch-addon-ready-3",
+  "created_at_utc": "2026-10-11T18:52:11.825953+00:00",
+  "checks_passed": 13,
+  "r4_runtime_pins_matched": 97,
+  "r4_input_count": 19,
+  "r4_run_id": "dc9d0bf6d0b94fb2b2479d3cb67d88e9",
+  "launcher_used_in_original_r4": false,
+  "actual_r4_generation_replayed": false,
+  "model_calls": 0,
+  "bank_calls": 0,
+  "original_runtime_edits": 0,
+  "final_submission_ready": false,
+  "external_send": false,
+  "fresh_replay_output_required": true,
+  "files": {
+    "OKU.txt": "8427b036acd566b67a3295ca4b5f921df40031cfad8ea036e91655947e1be141",
+    "r4-actual-preflight.json": "436a138bab2f49ee1f09cdc0a22e0b9be06c21afa1541d2aa933dc9e51e59a61",
+    "r4-clean-entry.json": "2969ed5851ff0df08cd42f7fe07b1e260192af942a32052dd5246415a99d34f8",
+    "Run-Jury-Case.py": "bfd657a2523b7690dc560d6977fe0163f22f8f495122207da56422a8090833e3",
+    "verification-v2.json": "9b19969ec4d57fe96a86b3c4fbe326f21f76079ba55c48e34b911c71581d6b46",
+    "verify_launcher.py": "2048ee924f6f5a1dba3250c46306614957edcf1d224d32d82e63e87d5d471eb0"
+  },
+  "source_manifest_repository_path": "data/final-case/snapshot-20261011T180103Z.manifest.json",
+  "source_manifest_sha256": "dc84f7f8b98125d5e4aef7cd987d50dec866fb89c2be3d2ab7d342e6ddfb253b"
+}

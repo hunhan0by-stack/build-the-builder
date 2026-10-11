@@ -1,0 +1,9 @@
+{
+  "child_pid": 24988,
+  "new_model_calls": 0,
+  "parent_pid": 16632,
+  "kind": "CONTROLLED_REPAIR_CANCELLATION",
+  "reason": "Completed authentic first response passes all non-coverage static gates; its exact platform-format citation is present in the pinned kit but the assembler only supports case-document citations. Continue with generic format-reference validation and provenance-bound deterministic reassembly, without editing the model response.",
+  "at": "2026-10-11T18:58:49.7647578Z",
+  "preserved_response_sha256": "1257f57dd6291a228642f60756da63087f3d09486046d53c9b966fc0fbfae03d"
+}

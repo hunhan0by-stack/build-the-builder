@@ -1,0 +1,1 @@
+{"timed_out": true, "return_code": null, "event_counts": {"thread.started": 1, "item.completed": 1, "turn.started": 1}, "item_type_counts": {"error": 1}, "diagnostic_classes": ["CODE_MODE_HOST_DISABLED_STARTUP_NOTICE"], "raw_logs_retained": false, "model_requested": "gpt-6.1-sol"}

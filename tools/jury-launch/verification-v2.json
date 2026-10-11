@@ -1,0 +1,142 @@
+{
+  "kind": "portable-launcher-independent-verification-1",
+  "checked_at_utc": "2026-10-11T18:49:08.953806+00:00",
+  "launcher_sha256": "bfd657a2523b7690dc560d6977fe0163f22f8f495122207da56422a8090833e3",
+  "staged_source_manifest_sha256": "bf1b4c4d188535987577408aa51ff79f0fb5c19306e52c54c11602e712b83104",
+  "source_files": 180,
+  "checks": [
+    {
+      "name": "isolated-python-foreign-cwd-unicode-case",
+      "passed": true,
+      "returncode": 0,
+      "observation": {
+        "status": "LAUNCH_INPUTS_VERIFIED",
+        "source_files": 19,
+        "model_calls": 0,
+        "live_verified": false
+      }
+    },
+    {
+      "name": "same-size-source-tampering-refused",
+      "passed": true,
+      "returncode": 1,
+      "observation": {
+        "status": "REFUSED",
+        "diagnostic": "LAUNCH_MANIFEST_MISMATCH",
+        "model_calls": 0
+      }
+    },
+    {
+      "name": "unexpected-source-file-refused",
+      "passed": true,
+      "returncode": 1,
+      "observation": {
+        "status": "REFUSED",
+        "diagnostic": "LAUNCH_MANIFEST_MISMATCH",
+        "model_calls": 0
+      }
+    },
+    {
+      "name": "duplicate-source-manifest-refused",
+      "passed": true,
+      "returncode": 1,
+      "observation": {
+        "status": "REFUSED",
+        "diagnostic": "LAUNCH_MANIFEST_INVALID",
+        "model_calls": 0
+      }
+    },
+    {
+      "name": "output-inside-input-refused",
+      "passed": true,
+      "returncode": 1,
+      "observation": {
+        "status": "REFUSED",
+        "diagnostic": "LAUNCH_FRESH_EXTERNAL_OUTPUT_REQUIRED",
+        "model_calls": 0
+      }
+    },
+    {
+      "name": "existing-output-refused",
+      "passed": true,
+      "returncode": 1,
+      "observation": {
+        "status": "REFUSED",
+        "diagnostic": "LAUNCH_FRESH_EXTERNAL_OUTPUT_REQUIRED",
+        "model_calls": 0
+      }
+    },
+    {
+      "name": "existing-report-refused",
+      "passed": true,
+      "returncode": 1,
+      "observation": {
+        "status": "REFUSED",
+        "diagnostic": "LAUNCH_FRESH_EXTERNAL_REPORT_REQUIRED",
+        "model_calls": 0
+      }
+    },
+    {
+      "name": "missing-native-reference-refused",
+      "passed": true,
+      "returncode": 1,
+      "observation": {
+        "status": "REFUSED",
+        "diagnostic": "LAUNCH_NATIVE_REFERENCE_MISSING",
+        "model_calls": 0
+      }
+    },
+    {
+      "name": "production-dispatch-flags-cwd-and-exit-propagation-with-inert-stub",
+      "passed": true,
+      "returncode": 17,
+      "observation": "Only a temporary inert CLI stub ran; no provider was invoked."
+    },
+    {
+      "name": "R4-equivalent-repair-partial-roles-model-reasoning-dispatch-inert-only",
+      "passed": true,
+      "returncode": 17,
+      "observation": "Fixture prior response and inert entry stub only; actual R4 was not replayed."
+    },
+    {
+      "name": "tampered-repair-response-refused-before-dispatch",
+      "passed": true,
+      "returncode": 1,
+      "observation": {
+        "status": "REFUSED",
+        "diagnostic": "CASE_REPAIR_RESPONSE_CHANGED",
+        "model_calls": 0
+      }
+    },
+    {
+      "name": "repair-with-different-mock-refused-before-dispatch",
+      "passed": true,
+      "returncode": 1,
+      "observation": {
+        "status": "REFUSED",
+        "diagnostic": "CASE_REPAIR_SOURCE_MISMATCH",
+        "model_calls": 0
+      }
+    },
+    {
+      "name": "active-repair-parent-refused-before-dispatch",
+      "passed": true,
+      "returncode": 1,
+      "observation": {
+        "status": "REFUSED",
+        "diagnostic": "CASE_REPAIR_RUN_STILL_ACTIVE",
+        "model_calls": 0
+      }
+    }
+  ],
+  "all_passed": true,
+  "cloned_inputs_unchanged_after_probes": true,
+  "cloned_runtime_unchanged_after_probes": true,
+  "original_source_edits": 0,
+  "original_input_edits": 0,
+  "model_calls": 0,
+  "bank_calls": 0,
+  "publication_calls": 0,
+  "production_builder_behavior_measured": false,
+  "final_ready": false
+}

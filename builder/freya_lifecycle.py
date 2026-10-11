@@ -38,13 +38,13 @@ def _text(value, limit=160):
     return value
 
 
-def _digest(value):
+def _digest(value, *, limit=4_000_000):
     try:
         raw = json.dumps(value, sort_keys=True, ensure_ascii=True,
                          allow_nan=False, separators=(',', ':')).encode()
     except (TypeError, ValueError, UnicodeError):
         raise LifecycleError('INVALID_JSON_PAYLOAD') from None
-    if len(raw) > 4_000_000:
+    if len(raw) > limit:
         raise LifecycleError('PAYLOAD_TOO_LARGE')
     return hashlib.sha256(raw).hexdigest()
 
@@ -81,7 +81,8 @@ def verify_simulation_call_binding(run, call, *, workspace_id, workflow_id,
     """
     if not isinstance(run, dict) or not isinstance(call, dict):
         raise LifecycleError('CALL_BINDING_OBJECT_REQUIRED')
-    _digest([run, call])
+    # Call detail includes per-event workflow snapshots; match protected capture.
+    _digest([run, call], limit=8_000_000)
     call_id = _uuid(run.get('callId'))
     expected = {'id': call_id, 'workspaceId': _uuid(workspace_id),
                 'assistantWorkflowId': _uuid(workflow_id)}

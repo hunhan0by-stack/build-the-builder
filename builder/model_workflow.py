@@ -380,12 +380,36 @@ which implement each; report unresolved if a clause cannot be implemented.
 Each coverage quote must be one contiguous verbatim substring of the supplied
 policy, preserving its punctuation. Never paraphrase, insert ellipses, join
 nonadjacent sentences, or quote platform references as if they were the policy.
-Use unresolved ONLY for bank-policy ambiguity or a branch your implementation
-still fails to implement. Put operating limits, lack of live validation and
-unprovable platform delivery guarantees in limitations, not unresolved.
+Use unresolved ONLY for missing or contradictory authority needed by an
+explicit source-required branch, or a required branch your implementation still
+fails to implement. Do not promote an optional robustness branch you introduced
+into a whole-workflow acceptance requirement. Cite the actual source obligation
+for every unresolved item; if no obligation requires that added branch, preserve
+an honest operating limitation without inventing an outcome or bank action.
+Put operating limits, lack of live validation and unprovable platform delivery
+guarantees in limitations, not unresolved.
+Keep recorded operation failures separate from terminal admission. A sticky
+failed or uncertain note must still prevent retry and false success claims; it
+does not by itself cancel a closing outcome already authorized by the source.
+When that outcome remains applicable and the source does not require successful
+completion of the failed operation before closure, preserve its reason, state
+the uncertainty honestly, say farewell and close exactly once after the other
+operations. Apply this distinction in both the scheduler and the close pre-hook.
+Do not use a blanket any-fault guard that traps this already-authorized closure.
+If the source actually conditions closure on that operation's success, retain
+that condition; never invent a reason, rollback, retry, transfer or outcome.
 If a non-promise infrastructure fault has no source-authorized terminal outcome,
 retain an incomplete service state and report that operational limit. Do not
 invent a refusal, failed identity, callback, transfer or service_error outcome.
+Conversational answers arrive as natural speech, including spoken ordinal days,
+number-word years and spoken digits. Keep the original utterance and normalize
+unambiguous values to the source API's required representation before validating
+them. Align the extraction contract with the controller's parser: never pass
+unrestricted spoken text into a digits-only parser without normalization. Do not
+infer missing identity values from customer context. Ask a useful clarification
+only for actual ambiguity or missing information, and do not repeat an unchanged
+question indefinitely when the customer has already supplied the requested form.
+Any retry limit or terminal action must still follow the supplied source policy.
 This missing universal fault guarantee alone does not prevent implementing the
 normal explicit policy branches. An actual subsequent customer statement may
 invoke its own authorized policy branch; never fabricate that statement.
@@ -573,28 +597,13 @@ class CodexWorkflowProvider:
         if self.transport not in ('https', 'default'):
             raise FoundationError('BUILDER_CODEX_TRANSPORT_INVALID')
 
-    def generate(self, *, brief, api, references, directory, remaining_seconds, feedback=None, tool_templates=None):
+    def structured_response(self, *, prompt, schema_value, directory, remaining_seconds):
         root = Path(directory)
         schema = root / 'model-response.schema.json'
         output = root / 'model-response.json'
         if output.exists():
             raise FoundationError('BUILDER_MODEL_FRESH_OUTPUT_REQUIRED')
-        schema.write_text(json.dumps(PLAN_RESULT_SCHEMA), encoding='utf-8')
-        prompt = prompt_for(brief, api, references, tool_templates)
-        if feedback is not None:
-            prompt += '\nAUTOMATIC_REPAIR_DATA\n' + json.dumps(feedback, ensure_ascii=False)
-            prompt += ('\nReview and repair this previous generated draft against the original sources. '
-                'Recheck that canonical decision answers are consumed in the outstanding source-defined '
-                'question, including a recipient check when the source accepts yes. Keep recipient, '
-                'security-answer, continuation and payment consent separate. Repair ordinary implementation '
-                'gaps, preserve complementary pending values across turns, and obey native code template '
-                'delimiter rules. Retain truly unsupported policy in unresolved. Return a complete '
-                'replacement artifact, not a patch. Historical behavior observations are bound to '
-                'their response_sha256 and marked not_retested: use them as unresolved repair '
-                'leads, never as evidence that a different draft was executed or failed. '
-                'Graph context records actual node visits and transition evaluations; '
-                'controller_state not_observed means no internal state or question meaning '
-                'was inferred. Inspect the referenced source paths in the previous draft.')
+        schema.write_text(json.dumps(schema_value), encoding='utf-8')
         (root / 'model-input.txt').write_text(prompt, encoding='utf-8')
         environment = {key: value for key, value in os.environ.items()
             if not key.startswith(('FREYA_', 'GH_', 'GITHUB_', 'ANTHROPIC_'))}
@@ -642,8 +651,34 @@ class CodexWorkflowProvider:
             raise FoundationError('BUILDER_MODEL_RESPONSE_UNAVAILABLE')
         events = checked_model_events(process.stdout)
         (root / 'model-events.json').write_text(json.dumps(events, indent=2), encoding='utf-8')
+        # This is the actual CLI session event stream, not reconstructed metrics.
+        # Host tools are disabled and the protocol is checked before retention.
+        # Keep stderr/auth diagnostics out of the deliverable session log.
+        (root / 'model-session.jsonl').write_bytes(process.stdout.encode('utf-8'))
         raw_response = output.read_bytes()
         response = strict_json(raw_response.decode('utf-8'))
+        return response, raw_response, process
+
+    def generate(self, *, brief, api, references, directory, remaining_seconds, feedback=None, tool_templates=None):
+        root = Path(directory)
+        prompt = prompt_for(brief, api, references, tool_templates)
+        if feedback is not None:
+            prompt += '\nAUTOMATIC_REPAIR_DATA\n' + json.dumps(feedback, ensure_ascii=False)
+            prompt += ('\nReview and repair this previous generated draft against the original sources. '
+                'Recheck that canonical decision answers are consumed in the outstanding source-defined '
+                'question, including a recipient check when the source accepts yes. Keep recipient, '
+                'security-answer, continuation and payment consent separate. Repair ordinary implementation '
+                'gaps, preserve complementary pending values across turns, and obey native code template '
+                'delimiter rules. Retain truly unsupported policy in unresolved. Return a complete '
+                'replacement artifact, not a patch. Historical behavior observations are bound to '
+                'their response_sha256 and marked not_retested: use them as unresolved repair '
+                'leads, never as evidence that a different draft was executed or failed. '
+                'Graph context records actual node visits and transition evaluations; '
+                'controller_state not_observed means no internal state or question meaning '
+                'was inferred. Inspect the referenced source paths in the previous draft.')
+        response, raw_response, process = self.structured_response(
+            prompt=prompt, schema_value=PLAN_RESULT_SCHEMA, directory=directory,
+            remaining_seconds=remaining_seconds)
         if not isinstance(response,dict) or set(response) != {'workflow_plan','code_blocks','unresolved','coverage','limitations'}:
             raise FoundationError('BUILDER_MODEL_RESPONSE_FIELDS_INVALID')
         # Preserve the original model response. Only proven whitespace changes

@@ -89,6 +89,7 @@ def public_name(value):
         raise PreflightError('PUBLIC_SOURCE_PATH_INVALID')
     if value in ('CONTEST-RUN.md', 'README.md', '.gitignore', '.gitattributes',
                  'pyproject.toml', 'requirements-evidence-protection.txt',
+                 'requirements-case-reader.txt',
                  'tests/test_portable_protection.py', 'tests/__init__.py'):
         return value
     if value == 'tests_integration/test_contest_evidence.py':

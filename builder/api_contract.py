@@ -42,11 +42,14 @@ def resolve_schema(schema: dict, document: dict, chain: tuple[str, ...] = ()) ->
         result["items"] = resolve_schema(result["items"], document, chain)
     if isinstance(result.get("additionalProperties"), dict):
         result["additionalProperties"] = resolve_schema(result["additionalProperties"], document, chain)
+    for keyword in ("not", "if", "then", "else"):
+        if keyword in result:
+            result[keyword] = resolve_schema(result[keyword], document, chain)
     for keyword in ("allOf", "oneOf", "anyOf"):
         if keyword in result:
             result[keyword] = [resolve_schema(value, document, chain) for value in result[keyword]]
     supported = {"type", "properties", "$defs", "items", "additionalProperties", "required",
-                 "allOf", "oneOf", "anyOf", "enum", "const", "nullable", "minItems", "maxItems",
+                 "allOf", "oneOf", "anyOf", "not", "if", "then", "else", "enum", "const", "nullable", "minItems", "maxItems",
                  "uniqueItems", "minLength", "maxLength", "pattern", "format", "minimum", "maximum",
                  "exclusiveMinimum", "exclusiveMaximum", "multipleOf", "minProperties", "maxProperties",
                  "description", "title", "default", "example", "examples", "deprecated", "$schema", "$id"}
@@ -78,6 +81,25 @@ def validate_value(value: Any, schema: dict, path: str = "$", strict_fields: boo
                     pass
             if not successes or (keyword == "oneOf" and successes != 1):
                 raise FoundationError(f"{path}: {keyword} mismatch")
+    if "if" in schema:
+        # A predicate and selected branch each use their own schema. Parent
+        # field restrictions still run below; do not inherit them into a
+        # required-only or properties-only condition/branch.
+        try:
+            validate_value(value, schema["if"], path, strict_fields=False)
+            branch = "then"
+        except FoundationError:
+            branch = "else"
+        if branch in schema:
+            validate_value(value, schema[branch], path, strict_fields=False)
+    if "not" in schema:
+        # Negation uses the subschema's own fields, not the caller's extra-field policy.
+        try:
+            validate_value(value, schema["not"], path, strict_fields=False)
+        except FoundationError:
+            pass
+        else:
+            raise FoundationError(f"{path}: not mismatch")
     kind = schema.get("type")
     kinds = kind if isinstance(kind, list) else [kind] if kind else []
     if schema.get("nullable") and value is None:

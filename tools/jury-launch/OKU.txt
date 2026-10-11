@@ -1,0 +1,62 @@
+TAŞINABİLİR ÇALIŞTIRMA EKİ v3 — 11 Ekim 2026
+
+Bu sürüm ayrı yardımcı başlatıcıdır. R4 üretimi bu başlatıcıyla yapılmadı.
+Özgün gerçek R4 komutu, kaydı ve çıktıları değiştirilmez. Bu ekin doğrulaması
+çağrısız ön kontroller ve etkisiz alt süreç denemelerinden oluşur.
+
+YAPILAN DÜZELTME
+--allow-partial ve --repair-from mevcut builder'a iletilir.
+--model ve --reasoning-effort, BUILDER_CODEX_MODEL ve
+BUILDER_CODEX_REASONING_EFFORT olarak alt sürece aktarılır.
+--codex-path aynı süreçte BUILDER_CODEX_EXECUTABLE olur.
+Seçenekler verilmezse mevcut builder model/ortam varsayılanları kullanılır.
+Bağımsız testler, R4'ün gpt-6-astra/high, 1500 saniye ve iki deneme ayarlarının
+aynı bağımsız CLI'ya aktarılmasını doğrular. Bunlar yerel ayarlardır.
+
+AYNI FINAL KAYNAKLARIYLA R4'E EŞDEĞER ÇAĞRISIZ KONTROL
+python -B Run-Jury-Case.py "{case_folder}" "{mock_url}" --repo-root "{repo_folder}" --source-manifest "{repo_folder}/data/final-case/snapshot-20261011T180103Z.manifest.json" --reference-only test-environment --reference-only example-scenarios.md --reference-only cloudflare-mock/example --codex-path "{codex_executable}" --model gpt-6-astra --reasoning-effort high --allow-partial --repair-from "{repo_folder}/artifacts/final-builder/final-case-r3-20261011" --out "{fresh_output_folder}" --budget-seconds 1500 --max-model-attempts 2 --check-only --report "{fresh_report_path}"
+
+Bu komut onarım girdisine bağlıdır: aynı belge hashleri, referans rolleri ve
+aynı mock adresi gerekir. Önceki yanıtın SHA-256'sı ve tamamlanmış koşu durumu
+kontrol edilir. Eski koşunun başarılı olduğunu varsaymaz. Kısmi üretim seçeneği
+çözülemeyen konuları kabul edildi diye değiştirmez; core denetimleri aynen kalır.
+
+--check-only kaldırılırsa aynı komut yeni üretim başlatır. Bu paketin hazırlanması
+sırasında böyle bir üretim çalıştırılmadı. Gerçek arşivlenmiş R4 çıktı klasörü
+dolu olacağından {fresh_output_folder} MUTLAKA henüz bulunmayan ayrı klasördür.
+Gerçek tarihsel R4 komutunda kullanılan çıktı yolu kanıt kaydında aynen korunur;
+yeniden çalıştırma için yalnız yeni çıktı konumu seçildiği açıkça belirtilir.
+Kaynak/onarım klasörlerinin içine çıktı ve rapor yazılması reddedilir.
+
+BAŞKA YENİ VAKA
+Aynı genel başlatıcı case_folder ve mock_url alır. Yeni kaynak manifesti kullanılır;
+R3'e bağlı --repair-from kaldırılır. Belge rollerini yeni vakanın kaynak
+açıklamasından seçin; buradaki üç referans klasörü bütün vakalar için sabit kural
+değildir. --allow-partial yalnız açıkça istenmiş kısmi üretim için seçilir.
+Repo köküne kurulmadıysa --repo-root zorunludur; göreli yollar çalışma klasörüne
+göredir. Bağımlılıklar repo içindeki requirements-case-reader.txt ile kurulur.
+
+KANIT
+verification-v2.json: 13/13 kontrol, asıl runtime ve girdilerde değişiklik sıfır.
+r4-clean-entry.json: 180 kaynak, 97 runtime, 19 belge ve 9 geçmiş onarım dosyası
+temiz kopyaya byte/hash eşliğiyle taşındı; yabancı klasörden gerçek CLI bayrakları
+--help ile okundu. Model kaynak projeksiyonu R4'ün kayıtlı projeksiyonuyla eşleşti.
+r4-actual-preflight.json: v2 başlatıcı gerçek R4 kaynak/önceki yanıt kayıtlarıyla
+çalıştırıldı; --check-only nedeniyle model, banka ve yayın çağrısı yapılmadı.
+Önceki başarısız R3 ikinci denemesinin eksik oturumu yeniden oluşturulmadı.
+
+Bu ek sonradan hazırlanmıştır; üretimi yapan araç diye sunulmaz. R4'ün gerçek
+üretim sonucu, native test, Freya export'u ve ona bağlı oturum/commit teslim
+sahiplerinin kanıtlarıyla ayrıca doğrulanmalıdır. ZIP resmî üç ek yerine geçmez.
+Yeni core edit, canlı test, GitHub yayını, e-posta veya YC gönderimi yapılmadı.
+
+REPO İÇİ KAYNAK MANİFESTİ
+Yukarıdaki R4 komutu, teslim sahibinin repo kopyasına koyduğu özgün
+data/final-case/snapshot-20261011T180103Z.manifest.json dosyasını kullanır.
+SHA-256: dc84f7f8b98125d5e4aef7cd987d50dec866fb89c2be3d2ab7d342e6ddfb253b.
+Bu dosyanın files dizisi 19 belgeyi listeler; SOURCE-MANIFEST.json ve
+INPUT-MANIFEST.json başlatıcı için bu belgenin yerine kullanılamaz.
+Yeni vaka komutunda --source-manifest o vakanın kendi manifestiyle değiştirilir.
+Manifest vaka klasörünün dışındadır ve vaka dosya sayısını değiştirmez.
+v3 yalnız bu taşınabilir yolun doküman/kanıt bağını günceller; başlatıcı kodu
+v2 ile aynı ve 13 kontrolün kaynak hashine birebir bağlıdır.

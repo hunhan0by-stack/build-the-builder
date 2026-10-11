@@ -3,6 +3,7 @@ import copy
 import re
 from .models import FoundationError, strict_json
 from .api_contract import validate_value
+from .hook_validation import validate_posthook_retention
 
 def obj(properties):
     return {'type':'object','additionalProperties':False,'properties':properties,'required':list(properties)}
@@ -35,12 +36,40 @@ NODE=obj({'name':string(),'node_type':string(['conversation','code','api_request
     'transitions':arr(TRANSITION)})
 PLAN=obj({'initial_node':string(),'system_prompt':string(),'nodes':arr(NODE)})
 
-def render_plan(plan, code_blocks, templates):
+def plan_schema(operation_names=None):
+    schema=copy.deepcopy(PLAN)
+    for key in ('tools','pre_actions'):
+        field=schema['properties']['nodes']['items']['properties'][key]['items']['properties']['kind']
+        field.clear()
+        field.update(string(None if operation_names is None else ['code_exec', *operation_names]))
+    return schema
+
+def body_default_field(body, name):
+    """Resolve an existing property only; prefer an exact literal dotted key."""
+    remaining = name
+    current = body
+    path = []
+    while True:
+        properties = current.get('properties') if isinstance(current, dict) else None
+        if not isinstance(properties, dict):
+            raise FoundationError('BUILDER_MODEL_BANK_BINDING_INVALID')
+        if remaining in properties:
+            path.append(remaining)
+            return properties[remaining], tuple(path)
+        head, separator, tail = remaining.partition('.')
+        if not separator or not head or not tail or head not in properties:
+            raise FoundationError('BUILDER_MODEL_BANK_BINDING_INVALID')
+        current = properties[head]
+        path.append(head)
+        remaining = tail
+
+
+def render_plan(plan, code_blocks, templates, *, schema=None):
     # The CLI output schema is not an acceptance gate. Validate the complete
     # wire plan here so malformed nested fields enter the repair path instead
     # of escaping as KeyError/TypeError or being silently omitted.
     try:
-        validate_value(plan, PLAN, strict_fields=True)
+        validate_value(plan, schema or PLAN, strict_fields=True)
     except (FoundationError, OverflowError, RecursionError, TypeError, ValueError):
         raise FoundationError('BUILDER_MODEL_PLAN_FIELDS_INVALID') from None
     try:
@@ -77,22 +106,38 @@ def render_plan(plan, code_blocks, templates):
                 raise FoundationError('BUILDER_MODEL_BANK_ACTION_INVALID')
             tool=copy.deepcopy(templates['tools'][kind])
             tool['function']['parameters']['properties']['connect_retries']={'type':'number','default':0}
-            fields=tool['function']['parameters']['properties']['body']['properties']
+            body=tool['function']['parameters']['properties']['body']
             seen=set()
             for binding in row['body_defaults']:
                 name=binding['field']
-                if name not in fields or name in seen:
+                field, path=body_default_field(body, name)
+                if any(path[:len(previous)] == previous or previous[:len(path)] == path for previous in seen):
                     raise FoundationError('BUILDER_MODEL_BANK_BINDING_INVALID')
-                seen.add(name)
+                seen.add(path)
                 value=strict_json(binding['value_json'])
                 dynamic=isinstance(value,str) and re.fullmatch(r'\{\{[A-Za-z0-9_.:-]+\}\}',value)
                 if not dynamic:
-                    try: validate_value(value,fields[name],strict_fields=True)
+                    try: validate_value(value,field,strict_fields=True)
                     except (FoundationError,OverflowError):
                         raise FoundationError('BUILDER_MODEL_LITERAL_DEFAULT_MISMATCH') from None
-                fields[name]['default']=value
+                # An inherited whole-object default shadows defaults on its
+                # leaves. Explicit nested bindings must be resolved from the
+                # child schema, while preserving sibling schemas and unrelated
+                # top-level defaults. This edits only the copied template.
+                ancestor = body
+                for part in path[:-1]:
+                    ancestor = ancestor['properties'][part]
+                    ancestor.pop('default', None)
+                field['default']=value
             for key in ('pre_process','post_process'):
-                if row[key+'_ref']: tool[key+'_code']=code(row[key+'_ref'])
+                if row[key+'_ref']:
+                    hook=code(row[key+'_ref'])
+                    if key=='post_process':
+                        try:
+                            validate_posthook_retention(hook)
+                        except FoundationError as error:
+                            raise FoundationError(str(error)+':'+row[key+'_ref']) from None
+                    tool[key+'_code']=hook
         if row['response_mapping']: tool['response_mapping']=copy.deepcopy(row['response_mapping'])
         return tool
     def condition(row):
@@ -141,7 +186,9 @@ def render_plan(plan, code_blocks, templates):
         if row['node_type']=='end_call':
             if row['tools'] or row['pre_actions'] or row['transitions']:
                 raise FoundationError('BUILDER_MODEL_END_NODE_ACTIONS_REFUSED')
-            node['terminal']={'type':'function','function':{'name':'end_call','handler':'__function__:end_call',
+            # A distinct native end reason preserves outcome intent; it is not a transfer API.
+            terminal_name=row['name'] if schema is not None else 'end_call'
+            node['terminal']={'type':'function','function':{'name':terminal_name,'handler':'__function__:end_call',
                 'parameters':{'type':'object','properties':{'message_mode':{'type':'string','default':'none'}}}}}
         nodes[row['name']]=node
     if used != set(blocks): raise FoundationError('BUILDER_MODEL_UNUSED_CODE_BLOCK')

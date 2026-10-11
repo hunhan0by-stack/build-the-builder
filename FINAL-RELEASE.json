@@ -1,0 +1,38 @@
+{
+  "status": "PACKAGE_BYTES_VERIFIED_PENDING_PUBLICATION",
+  "source_commit": "ef3ae133b456fb34ebc2a70a875ae79e350daef2",
+  "source_files": 183,
+  "runtime_files_matched": 98,
+  "readme_projection": "README.md contains CONTEST-RUN.md bytes from source_commit",
+  "submission_ref": "faikzade-final-20261011",
+  "original_run_command": "python -B -X utf8 builder/build.py data/final-case/snapshot-20261011T180103Z https://build-the-builder-final-bank.final-bank-worker-scaffold.workers.dev --reference-only test-environment --reference-only example-scenarios.md --reference-only cloudflare-mock/example --allow-partial --assemble-from artifacts/final-builder/final-case-r4-20261011 --assemble-attempt 1 --out artifacts/final-builder/final-case-r4-reassembled-v2-20261011 --budget-seconds 120",
+  "reproduction": "Run from repository root with Python and requirements-case-reader.txt installed. The command uses unchanged recorded output and makes zero new model calls. The recorded output directory is intentionally absent in this checkout. For another rerun choose a new --out path; existing outputs are refused.",
+  "export_reproduction": "This command reconstructs the local workflow, not a new platform export. The attached platform export and original CLI session are preserved byte-for-byte. Re-publishing would require separately authorized platform credentials.",
+  "assembly_run_id": "13d7e901a5ec45e889b1bedfe3ebd020",
+  "assembly_new_model_calls": 0,
+  "original_model_run_id": "dc9d0bf6d0b94fb2b2479d3cb67d88e9",
+  "original_attempt": 1,
+  "partial_generation": true,
+  "live_behavior_verified": false,
+  "physical_ivr_transfer_verified": false,
+  "limitations_file": "artifacts/final-critical-ready-20261011/HANDOFF.json",
+  "attachments": {
+    "submission.json": {
+      "bytes": 884,
+      "sha256": "cf8e213db463c14f7db1f4accca2ccd053ba6226a8250c7104948511a8593de6"
+    },
+    "submission/workflow.export.json": {
+      "bytes": 141413,
+      "sha256": "d1a2fcbfa499655a04f0bfca81c4a164b3a675eb6e47ba003c9530b9fad19cd0"
+    },
+    "submission/trace.txt": {
+      "bytes": 194309,
+      "sha256": "1b1fdca988d01f4b7a6a793d20992ca8399f1882a50d32fedbe227903987abc2"
+    }
+  },
+  "publication_authorization": {
+    "user_message_id": "01a12c64-7f5d-73c3-a912-d94d167f0e48",
+    "verified_in_thread": "01a125bd-9132-7d13-b7fb-7f5fa0a42c88",
+    "email_sender": "Manager thread only"
+  }
+}

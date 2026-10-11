@@ -1,0 +1,913 @@
+{
+  "kind": "independent-r4-clean-entry-closure-1",
+  "checked_at_utc": "2026-10-11T18:46:57.971830+00:00",
+  "run_id": "dc9d0bf6d0b94fb2b2479d3cb67d88e9",
+  "generation_status_at_capture": "STARTED",
+  "trace_sha256_at_capture": "53dd09f0bf672381646c556b706a6e81136c7161eda62deb7b8ab84e476b6228",
+  "checks": [
+    {
+      "name": "R4_RUN_ID_MATCHES_ALL_OWNERS",
+      "passed": true
+    },
+    {
+      "name": "R4_STAGED_SOURCE_MANIFEST_PIN",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:.gitattributes",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:.gitignore",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:CONTEST-RUN.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:README.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/__main__.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/api_contract.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/brief_formats.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/brief_requirements.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/build.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/calendar.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/case_contract.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/case_model.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/case_reader.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/cli.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/compiled_conversation.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/compiled_policy.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/conversation.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/dialogue_recovery.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/durable_replay.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/export_pipeline.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/extract.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/freya_bank_safety.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/freya_completion_binding.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/freya_export.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/freya_lifecycle.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/generic_emitter.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/hook_validation.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/ingest.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/model_diagnostics.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/model_wire.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/model_workflow.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/models.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/native_branch_extensions.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/native_freya.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/native_kit_emitter.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/native_kit_verification.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/native_multi_product.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/native_official_closure.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/native_payment_negotiation.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/native_policy_bindings.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/native_safety_admission.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/native_write_guard.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/pipeline.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/plan.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/platform_bridge.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/platform_receipts.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/policy_specs.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/python_format.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/runtime.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/semantic_renderer.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/semantics.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/turns.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:builder/validate.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:compiler/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:compiler/__main__.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:compiler/cli.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:compiler/core.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:compiler/providers.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:compiler/schema.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:compiler/typed_source.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:data/freya-hackathon/kit-v3/build-the-builder/README.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:data/freya-hackathon/kit-v3/build-the-builder/VERSION",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:data/freya-hackathon/kit-v3/build-the-builder/briefs/brief-a.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:data/freya-hackathon/kit-v3/build-the-builder/briefs/brief-b.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:data/freya-hackathon/kit-v3/build-the-builder/docs/api.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:data/freya-hackathon/kit-v3/build-the-builder/docs/tools-and-code.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:data/freya-hackathon/kit-v3/build-the-builder/docs/workflow-format.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:data/freya-hackathon/kit-v3/build-the-builder/examples/base-agent.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:data/freya-hackathon/kit-v3/build-the-builder/freya.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:data/freya-hackathon/kit-v3/build-the-builder/public-test-set.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:data/freya-hackathon/kit-v3/build-the-builder/tools/openapi.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:data/freya-hackathon/kit-v3/build-the-builder/tools/score.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:integration/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:integration/bank_transport.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:integration/contest_evidence.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:integration/failure_learning.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:integration/native_pilot.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:integration/pilot.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:integration/preflight.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:integration/private_state.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:integration/response_diagnostics.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:integration/sanitize.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:integration/session_guard.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:integration/transport.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/audit_pub01.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/audit_public39.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/behavioral_repair.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/build_the_builder.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/case_build.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/case_prepare.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/contest_build.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/contest_chat.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/contest_chat_evidence.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/contest_practice.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/contest_preflight.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/credit_observation.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/final_run_pairing.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/generalization_benchmark.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/generated_behavior.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/generic_cycle.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/jury_entry.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/jury_preflight.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/local_pub01.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/native_behavioral_repair.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/native_candidate.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/native_failure_learning.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/native_product_delivery.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/official_native_build.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/official_native_delivery.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/prepare_contest_checkout.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/prepare_delivery.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/prepare_pilot.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/product_build.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/product_cycle.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/public39.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/public_behavior.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/repair_cycle.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/repair_observations.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/verify_pilot_controller.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/verify_product.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:orchestration/workspace_lock.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:project-management/local-evidence/contract-v1.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:project-management/local-evidence/contract-v2.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:project-management/local-evidence/pub01_behavior.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:project-management/local-evidence/validate_evidence.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:project-management/local-evidence/validate_pub01_v2.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:pyproject.toml",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:requirements-case-reader.txt",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:requirements-evidence-protection.txt",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests/conversation_helpers.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests/helpers.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests/test_portable_protection.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests/test_public_replays.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_compiler/__init__.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_compiler/test_brief_formats.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_compiler/test_brief_requirements.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_integration/test_contest_evidence.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/generated_workflow_harness.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/inputs/new_brief_behavior/cedar-v13/behavior-fixture.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/inputs/new_brief_behavior/cedar-v13/brief.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/inputs/new_brief_behavior/cedar-v13/tool-api.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/inputs/new_brief_behavior/juniper-new/behavior-fixture.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/inputs/new_brief_behavior/juniper-new/brief.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/inputs/new_brief_behavior/juniper-new/tool-api.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/inputs/openapi.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/inputs/single-brief.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_behavior_cache.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_call_response_size.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_case_build.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_case_schema_shapes.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_causal_repair_observations.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_contest_behavior_pipeline.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_contest_build.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_contest_chat.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_contest_chat_entry.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_contest_checkout_closure.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_contest_entry_evidence.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_contest_main_wire.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_contest_practice.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_contest_preflight.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_contest_run_pairing.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_conversation_passthrough.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_credit_observation.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_extraction_interface.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_final_run_pairing.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_generated_behavior.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_generated_candidate_collective.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_generated_candidate_dialogue.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_generic_repair_0.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_generic_repair_1.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_generic_repair_2.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_model_diagnostics.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_model_wire.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_native_defaults.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_public_behavior.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_python_format.py",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCE:tests_orchestration/test_single_markdown_sections.py",
+      "passed": true
+    },
+    {
+      "name": "ALL_R4_RUNTIME_BYTES_IN_CLEAN_CHECKOUT",
+      "passed": true
+    },
+    {
+      "name": "R4_HANDOFF_RUNTIME_PINS_MATCH",
+      "passed": true
+    },
+    {
+      "name": "EXACTLY_ONE_STAGED_CASE_BRIEF",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/BRIEF.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/README.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/cloudflare-mock/README.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/cloudflare-mock/example/example-response.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/cloudflare-mock/example/worker.js",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/cloudflare-mock/example/wrangler.toml",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/example-scenarios.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/sources/documents/2025-08-14-cards-faq.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/sources/documents/2026-09-10-ivr-prompt-sheet.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/sources/documents/2026-10-01-service-contract.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/sources/emails/2026-09-24-kickoff-questions.txt",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/sources/emails/2026-10-09-decisions-recap.txt",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/sources/emails/attachments/2026-09-02-statement-debt-analysis.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/sources/emails/attachments/2026-10-08-statement-debt-analysis.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/sources/meetings/2026-10-07-analysis-session-transcript.txt",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/sources/meetings/2026-10-10-follow-up-session-transcript.txt",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/statement-debt-call-flow.pdf",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/test-environment/test-customers.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_INPUT:data/final-case/snapshot-20261011T180103Z/test-environment/test-customers.md",
+      "passed": true
+    },
+    {
+      "name": "STAGED_CASE_IS_EXACT_R4_INPUT_SET",
+      "passed": true
+    },
+    {
+      "name": "R4_REPAIR_PARENT_RECEIPT_MATCHES",
+      "passed": true
+    },
+    {
+      "name": "STAGED_REPAIR_PARENT:artifacts/final-builder/final-case-r3-20261011/end-to-end-trace.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_REPAIR_PARENT:artifacts/final-builder/final-case-r3-20261011/model-attempt-1/model-session.jsonl",
+      "passed": true
+    },
+    {
+      "name": "STAGED_REPAIR_PARENT:artifacts/final-builder/final-case-r3-20261011/model-attempt-1/model-input.txt",
+      "passed": true
+    },
+    {
+      "name": "STAGED_REPAIR_PARENT:artifacts/final-builder/final-case-r3-20261011/model-attempt-1/model-response.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_REPAIR_PARENT:artifacts/final-builder/final-case-r3-20261011/model-attempt-1/model-process-status.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_REPAIR_PARENT:artifacts/final-builder/final-case-r3-20261011/model-attempt-1/model-response.schema.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_REPAIR_PARENT:artifacts/final-builder/final-case-r3-20261011/model-attempt-2/model-input.txt",
+      "passed": true
+    },
+    {
+      "name": "STAGED_REPAIR_PARENT:artifacts/final-builder/final-case-r3-20261011/model-attempt-2/model-process-status.json",
+      "passed": true
+    },
+    {
+      "name": "STAGED_REPAIR_PARENT:artifacts/final-builder/final-case-r3-20261011/model-attempt-2/model-response.schema.json",
+      "passed": true
+    },
+    {
+      "name": "REPAIR_INPUTS_SATISFY_BUILDER_SOURCE_BINDING",
+      "passed": true
+    },
+    {
+      "name": "ORIGINAL_REPAIR_RESPONSE_BYTES_MATCH",
+      "passed": true
+    },
+    {
+      "name": "R4_FULL_COMMAND_PARSE_AND_IMPORT_CLOSURE_FROM_FOREIGN_CWD",
+      "passed": true
+    },
+    {
+      "name": "CLEAN_CHECKOUT_DOCUMENT_READER_IMPORT_AND_EXTRACTION",
+      "passed": true
+    },
+    {
+      "name": "CLEAN_CASE_ROLES_AND_MODEL_PROJECTION_MATCH_R4",
+      "passed": true
+    },
+    {
+      "name": "NO_BUILD_OUTPUT_CREATED",
+      "passed": true
+    },
+    {
+      "name": "STAGED_SOURCES_DID_NOT_ADVANCE_DURING_COPY",
+      "passed": true
+    }
+  ],
+  "isolated_copy": "C:\\Users\\hunha\\OneDrive\\Desktop\\build the builder\\tmp\\r4-clean-entry-20261011T184657Z\\source",
+  "model_calls": 0,
+  "bank_calls": 0,
+  "original_source_edits": 0,
+  "final_ready": false,
+  "status": "PASS_R4_LOCAL_ENTRY_CLOSURE",
+  "source_files": 180,
+  "runtime_files": 97,
+  "input_files": 19,
+  "repair_parent_files": 9,
+  "model_projection_sha256": "3fb44e1fadf290eb4ca9e735dac47cb609de287db88391baf3880d16162826da",
+  "source_manifest_sha256": "bf1b4c4d188535987577408aa51ff79f0fb5c19306e52c54c11602e712b83104",
+  "actual_generation_replayed": false,
+  "cli_authentication_verified": false,
+  "missing_parent_timeout_session_disclosed": true,
+  "scope": "Exact staged source/input/repair bytes, source-role projection, and inert full CLI parsing. No generation, native behavior, final export, credentials or send verified."
+}

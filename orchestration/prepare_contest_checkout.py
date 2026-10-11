@@ -17,6 +17,7 @@ def prepare(directory, *, regression_candidate=None, regression_candidate_sha256
         raise FoundationError('CONTEST_FRESH_CHECKOUT_REQUIRED')
     names = ['CONTEST-RUN.md', '.gitignore', '.gitattributes', 'pyproject.toml',
              'requirements-evidence-protection.txt', 'tests/__init__.py',
+             'requirements-case-reader.txt',
              'tests/test_portable_protection.py']
     # Required regression dependencies are explicit rather than silently omitted
     # by glob. A graph fixture is optional and never a provider final export.
@@ -47,6 +48,8 @@ def prepare(directory, *, regression_candidate=None, regression_candidate_sha256
     for package in ('builder', 'compiler', 'orchestration'):
         names.extend(path.relative_to(ROOT).as_posix() for path in (ROOT / package).glob('*.py'))
     for package, pattern in (('tests_orchestration', 'test_contest_build.py'),
+                             ('tests_orchestration', 'test_call_response_size.py'),
+                             ('tests_orchestration', 'test_case_build.py'),
                              ('tests_orchestration', 'test_contest_practice.py'),
                              ('tests_orchestration', 'test_contest_main_wire.py'),
                              ('tests_orchestration', 'test_contest_entry_evidence.py'),

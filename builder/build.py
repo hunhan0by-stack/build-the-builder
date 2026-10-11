@@ -7,7 +7,14 @@ if __package__ in (None, ''):
     sys.path = [entry for entry in sys.path if Path(entry).resolve() != Path(__file__).resolve().parent]
     sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
-from orchestration.contest_build import main
+def main(argv=None):
+    args=list(sys.argv[1:] if argv is None else argv)
+    case_mode=bool(args and Path(args[0]).is_dir()) or (len(args)>1 and args[1].startswith(('https://','http://')))
+    if case_mode:
+        from orchestration.case_build import main as entry
+    else:
+        from orchestration.contest_build import main as entry
+    return entry(args)
 
 if __name__ == '__main__':
     raise SystemExit(main())

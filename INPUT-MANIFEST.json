@@ -1,0 +1,78 @@
+{
+  "data/final-case/snapshot-20261011T180103Z/BRIEF.md": {
+    "bytes": 4568,
+    "sha256": "b81506df0cb43ab5ce023b3e3880d6f477021da81bc4ed3c8b5d0aab61e42da9"
+  },
+  "data/final-case/snapshot-20261011T180103Z/README.md": {
+    "bytes": 1300,
+    "sha256": "476f99af2e66739de8ed4a192b04c003cc6ab5d31a9bce6825af4d9608852cc6"
+  },
+  "data/final-case/snapshot-20261011T180103Z/cloudflare-mock/README.md": {
+    "bytes": 3204,
+    "sha256": "6e50898b1bcc91ca76646b557786d722888bb8ae96aa719f20b659daa23abd6a"
+  },
+  "data/final-case/snapshot-20261011T180103Z/cloudflare-mock/example/example-response.json": {
+    "bytes": 87,
+    "sha256": "0deeee4de065d3fdbd78818ba270547c5d9601ab8398b1e4d5596603196401a9"
+  },
+  "data/final-case/snapshot-20261011T180103Z/cloudflare-mock/example/worker.js": {
+    "bytes": 1791,
+    "sha256": "0fb2a47300c8e131a47e6e265ff33350733e0bdb19c17097aab4168dc6901d24"
+  },
+  "data/final-case/snapshot-20261011T180103Z/cloudflare-mock/example/wrangler.toml": {
+    "bytes": 75,
+    "sha256": "a7a80f867f971916c521ef2133d405ce8698423b4db19f93f734f03f987ea60b"
+  },
+  "data/final-case/snapshot-20261011T180103Z/example-scenarios.md": {
+    "bytes": 7005,
+    "sha256": "c7534cb5d591d6399a72c3c717f35d75c81ff2d07c1587ba5ab90245d283d989"
+  },
+  "data/final-case/snapshot-20261011T180103Z/sources/documents/2025-08-14-cards-faq.md": {
+    "bytes": 4843,
+    "sha256": "bb26e035f72da6d5add21d62271dc798106c1a859deb00fa9a9878dc8f6d8f26"
+  },
+  "data/final-case/snapshot-20261011T180103Z/sources/documents/2026-09-10-ivr-prompt-sheet.md": {
+    "bytes": 8060,
+    "sha256": "dfb0d352d57dc22466c0b11ee557b4af1ba0f266be48b455aabae140a64dd463"
+  },
+  "data/final-case/snapshot-20261011T180103Z/sources/documents/2026-10-01-service-contract.md": {
+    "bytes": 19610,
+    "sha256": "692414a06036911509072d602b6c85bf38cbf2c791d26488d53d28be1cf35470"
+  },
+  "data/final-case/snapshot-20261011T180103Z/sources/emails/2026-09-24-kickoff-questions.txt": {
+    "bytes": 8102,
+    "sha256": "d19e44e8098850f378fd6816892f7b9196ec6f469ccd6dc8dea76566b850be74"
+  },
+  "data/final-case/snapshot-20261011T180103Z/sources/emails/2026-10-09-decisions-recap.txt": {
+    "bytes": 4012,
+    "sha256": "709f18f3d73c4e9398a3ed9dc7249a54b7ca48dcdde8ce7aa7ebbbcdef1b0732"
+  },
+  "data/final-case/snapshot-20261011T180103Z/sources/emails/attachments/2026-09-02-statement-debt-analysis.md": {
+    "bytes": 16393,
+    "sha256": "16915b44652e16afeea64d5f3ecf6d09b9bcce54d7d39b132ff8237369c507a2"
+  },
+  "data/final-case/snapshot-20261011T180103Z/sources/emails/attachments/2026-10-08-statement-debt-analysis.md": {
+    "bytes": 28973,
+    "sha256": "c33b5640a06f6be6e6d3cc7f86189ab75bf4ffb4e935874b3ee3b48b03ff1094"
+  },
+  "data/final-case/snapshot-20261011T180103Z/sources/meetings/2026-10-07-analysis-session-transcript.txt": {
+    "bytes": 31908,
+    "sha256": "6e75d0013cf6c653f4a25a6ce0c2f6e0a96b4472474e530d6ab4bebf8b21b20d"
+  },
+  "data/final-case/snapshot-20261011T180103Z/sources/meetings/2026-10-10-follow-up-session-transcript.txt": {
+    "bytes": 11377,
+    "sha256": "860e3a0249492482535af48c2103430e7de4abc351efe53e6d872b4db837137b"
+  },
+  "data/final-case/snapshot-20261011T180103Z/statement-debt-call-flow.pdf": {
+    "bytes": 49629,
+    "sha256": "1092fe84329911c89477e794ed874f8216aeb31cc4c825931c4e017374eb69ca"
+  },
+  "data/final-case/snapshot-20261011T180103Z/test-environment/test-customers.json": {
+    "bytes": 707267,
+    "sha256": "d6ce155638f61ab17910d53ea993a2b0d68cf4e10d6b9db2fb8e4a7add0ef44d"
+  },
+  "data/final-case/snapshot-20261011T180103Z/test-environment/test-customers.md": {
+    "bytes": 7691,
+    "sha256": "f0c6607e8ad2c874608dc39d8ab13fbb11f5f1f2975c08fe871a378c32815375"
+  }
+}

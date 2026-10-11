@@ -102,6 +102,8 @@ class StaticContractTests(unittest.TestCase):
                         self.assertEqual(metadata['reasoning_effort_requested'],'low')
                         self.assertFalse(metadata['model_independently_observed'])
                         self.assertNotIn('private/unit/profile-and-key',json.dumps(metadata))
+                        self.assertEqual((Path(temporary)/'model-session.jsonl').read_bytes(),stdout.encode('utf-8'))
+                        self.assertNotIn('private/unit/profile-and-key',(Path(temporary)/'model-session.jsonl').read_text())
                 self.assertNotIn('private-unit-marker',(Path(temporary)/'model-process-status.json').read_text())
         with self.assertRaisesRegex(FoundationError,'REASONING_EFFORT_INVALID'):
             CodexWorkflowProvider(executable='unit-only',reasoning_effort='invalid')
@@ -441,6 +443,85 @@ class BudgetAndMutationTests(unittest.TestCase):
                 publish(original, client=client, state_path=state, slot='A', directory=temporary, budget=Budget(60))
             self.assertEqual(calls, ['export'])
             self.assertEqual(json.loads(state.read_text())['A']['status'], 'MUTATION_PENDING')
+
+
+
+
+
+class ExplicitModelBudgetTests(unittest.TestCase):
+    def run_unresolved(self, *, limit=None, counts=(8, 4)):
+        calls = []
+        contract = BankContract.from_path(API)
+        class Model:
+            def generate(self, **kwargs):
+                index = len(calls)
+                calls.append(kwargs)
+                if index < len(counts):
+                    response = {'workflow_json': json.dumps(workflow(contract)),
+                        'code_blocks': [], 'unresolved': ['source item ' + str(n)
+                            for n in range(counts[index])], 'coverage': [], 'limitations': []}
+                    (kwargs['directory']/'model-response.json').write_text(json.dumps(response))
+                    raise FoundationError('BUILDER_UNRESOLVED_MODEL_POLICY')
+                return workflow(contract), {'model': 'synthetic-unit-only',
+                    'semantic_correctness_verified': False}
+        OUTPUT.mkdir(parents=True, exist_ok=True)
+        with tempfile.TemporaryDirectory(dir=OUTPUT) as directory:
+            target = Path(directory)/'run'
+            opts = {} if limit is None else {'max_model_attempts': limit}
+            with patch('orchestration.contest_build.publish') as publication:
+                result = run(brief_path=Path(__file__).parent/'inputs/single-brief.md',
+                    tool_api_path=API, directory=target, provider='codex',
+                    model_provider=Model(), deadline_seconds=60, **opts)
+            publication.assert_not_called()
+            saved = {p.relative_to(target).as_posix(): p.read_bytes()
+                for p in target.rglob('*') if p.is_file()}
+        return result, calls, saved
+
+    def test_default_keeps_third_repair_when_unresolved_improves(self):
+        result, calls, saved = self.run_unresolved()
+        self.assertEqual(len(calls), 3)
+        self.assertEqual(result['model_attempt_limit'], 3)
+        self.assertEqual(result['status'], 'LOCAL_WORKFLOW_GENERATED')
+        self.assertNotIn('repair_stop', result['compilation'])
+        self.assertEqual(len(calls[2]['feedback']['previous_generated_response']['unresolved']), 4)
+        self.assertIn('model-attempt-2/diagnostics.json', saved)
+
+    def test_explicit_two_preserves_refusal_and_draft_without_third_call(self):
+        result, calls, saved = self.run_unresolved(limit=2)
+        self.assertEqual(len(calls), 2)
+        self.assertEqual(result['model_attempt_limit'], 2)
+        self.assertTrue(result['compilation']['attempt_limit_reached'])
+        self.assertEqual(result['status'], 'BLOCKED')
+        self.assertEqual(result['diagnostic'], 'BUILDER_UNRESOLVED_MODEL_POLICY')
+        self.assertEqual(len(json.loads(saved['model-attempt-2/model-response.json'])['unresolved']), 4)
+        self.assertFalse(any(p.startswith('model-attempt-3/') for p in saved))
+        self.assertFalse(result['live_success_verified'])
+        self.assertFalse(result['final_submission_ready'])
+
+    def test_explicit_one_is_a_single_targeted_call_not_a_policy_bypass(self):
+        result, calls, saved = self.run_unresolved(limit=1)
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(result['status'], 'BLOCKED')
+        self.assertEqual(result['diagnostic'], 'BUILDER_UNRESOLVED_MODEL_POLICY')
+        self.assertIn('model-attempt-1/diagnostics.json', saved)
+
+    def test_attempt_limit_rejects_bool_noninteger_and_out_of_range_before_dispatch(self):
+        for bad in (True, False, 0, 4, -1, 2.0, '2'):
+            with self.subTest(bad=bad), tempfile.TemporaryDirectory() as directory:
+                with patch('orchestration.contest_build.publish') as publication:
+                    with self.assertRaisesRegex(FoundationError, 'MODEL_ATTEMPT_LIMIT_INVALID'):
+                        run(brief_path=Path('unused'), tool_api_path=Path('unused'),
+                            directory=Path(directory)/'unused', max_model_attempts=bad)
+                publication.assert_not_called()
+
+    def test_cli_forwards_explicit_attempt_budget(self):
+        from contextlib import redirect_stdout
+        from io import StringIO
+        from orchestration.contest_build import main
+        with patch('orchestration.contest_build.run', return_value={
+                'status': 'BLOCKED', 'elapsed_seconds': 0}) as called, redirect_stdout(StringIO()):
+            self.assertEqual(main(['brief.md', 'api.json', '--max-model-attempts', '1']), 2)
+        self.assertEqual(called.call_args.kwargs['max_model_attempts'], 1)
 
 
 if __name__ == '__main__':
