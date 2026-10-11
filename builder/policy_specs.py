@@ -1,0 +1,76 @@
+"""Reviewed interpretation of the supplied practice briefs, version-bound, not a general NLP compiler."""
+
+BRIEF_A_HASH = "d57c049c89aec4615f5b939c5a96ee9bd194142d17045bc4036615cfbdf0f1c7"
+BRIEF_B_HASH = "c59c70099148b91c13e9c5e40246a63b58638f09469d735f8eb65771bb63d550"
+API_HASH = "9a8410b12e5c82b6c6a30e9ed7030574d6f919cafdb1e035cef7bd876b0badb8"
+
+# stage, trigger, required effects, forbidden effects. Numeric limits remain in source facts.
+A = {
+1: ("opening", "call_start", ["digital_assistant_bank_recording_first_sentence", "privacy_until_both_factors_pass", "privacy_applies_to_relatives"], ["unverified_debt_product_payment_disclosure"]),
+2: ("person", "opening_complete", ["ask_title_last_name"], []),
+3: ("person", "person_reply", ["exact_affirmation_or_own_name_only", "one_reask", "second_unclear_closes_not_reached_unclear", "answer_faq_before_reask"], ["hello_go_ahead_who_is_this_as_confirmation", "third_person_ask"]),
+4: ("global", "robot_question", ["digital_assistant_answer", "resume_current_question"], ["claim_human"]),
+5: ("third_party", "other_person", ["opening_only_disclosure", "ask_when_customer_reachable"], ["calling_purpose"]),
+6: ("third_party", "callback_proposal", ["today_or_next_business_day", "inclusive_callback_window", "strictly_after_call_now", "schedule_then_close_callback"], ["schedule_before_now"]),
+7: ("third_party", "invalid_callback", ["one_alternative_request", "second_invalid_closes_no_callback"], ["invalid_schedule", "unbounded_reasks"]),
+8: ("global", "wrong_number", ["close_not_reached_wrong_number"], ["security_questions"]),
+9: ("global", "customer_deceased", ["exact_condolence", "close_not_reached_deceased"], ["further_questions"]),
+10: ("third_party", "relative_offers_answers_or_payment", ["keep_privacy_gate", "only_callback_route"], ["relative_security_answer", "account_tool", "debt_disclosure"]),
+11: ("identity", "confirmed_customer", ["dob_then_phone_one_at_a_time", "verify_each_answer", "iso_dob", "numeric_dob_day_month_year"], ["reorder_factors"]),
+12: ("identity", "wrong_answer", ["retry_current_factor", "shared_wrong_answer_budget"], ["reset_budget_between_factors"]),
+13: ("identity", "day_month_swapped_hint", ["ask_month_as_word", "hint_retry_not_wrong"], ["increment_wrong_counter_for_hint"]),
+14: ("identity", "wrong_budget_exhausted", ["app_or_branch_advice", "close_not_verified_failed"], ["debt_disclosure", "extra_verification_attempt"]),
+15: ("identity", "decline_or_call_purpose_question", ["explain_security_once", "second_decline_closes_not_verified_declined"], ["repeated_protection_explanation", "debt_disclosure"]),
+16: ("account", "both_factors_verified", ["get_account_after_both_factors"], ["premature_account_access"]),
+17: ("disclosure", "valid_account_snapshot", ["collections_late_payment_explanation", "product_in_words", "past_due_and_days_late"], ["invented_product_or_amount"]),
+18: ("dates", "product_snapshot", ["band_from_product_days_late", "deadline_from_business_calendar_and_call_now"], ["real_clock_deadline"]),
+19: ("dates", "promise_proposal", ["today_or_later", "business_day", "at_or_before_product_deadline"], ["invalid_promise_date"]),
+20: ("dates", "nonbusiness_date_not_after_deadline", ["offer_next_business_day", "later_than_deadline_uses_rule_23"], ["silently_record_nonbusiness_date"]),
+21: ("dates", "vague_date", ["ask_exact_day_once", "still_vague_offer_deadline"], ["unbounded_date_clarification"]),
+22: ("dates", "weekday_phrase", ["next_means_following_calendar_week", "this_means_current_calendar_week", "friday_next_friday_is_following_week"], ["rolling_seven_day_interpretation"]),
+23: ("dates", "after_deadline", ["say_latest_and_offer_deadline", "refused_deadline_is_flat_refusal"], ["later_promise"]),
+24: ("amounts", "first_offer", ["propose_full_past_due", "agent_proposes_amount"], ["ask_how_much_can_you_pay"]),
+25: ("amounts", "product_type", ["floor_from_api_field_mapping"], ["invented_floor"]),
+26: ("amounts", "full_too_much", ["offer_floor_once", "rest_stays_overdue", "floor_refusal_is_flat_refusal", "attempt_two_may_offer_floor_on_deadline"], ["discount", "repeated_floor_concession"]),
+27: ("amounts", "customer_amount", ["accept_inclusive_floor_full_interval", "below_floor_offer_floor_once", "rejected_floor_is_flat_refusal"], ["accept_below_floor", "amount_proposal_as_immediate_refusal"]),
+28: ("offer", "first_payment_question", ["ask_payment_today_first"], []),
+29: ("negotiation", "date_or_amount_proposal", ["route_to_date_amount_validation", "do_not_consume_persuasion"], ["proposal_as_flat_refusal"]),
+30: ("negotiation", "flat_refusal_or_nonanswer", ["consume_one_product_attempt", "first_full_or_previously_needed_floor", "first_last_business_day_of_this_week_or_next_if_today_is_last", "second_late_only_floor_on_deadline"], ["attempt_two_for_early_band"]),
+31: ("negotiation", "attempt_budget_exhausted", ["resolve_refused", "stop_product_offers"], ["repeat_refused_offer", "extra_attempt"]),
+32: ("global", "illness_family_death_job_loss", ["one_sentence_sympathy", "no_persuasion", "offer_support_once", "accepted_support_transfer", "declined_support_hardship", "self_proposal_allowed", "priority_before_30_and_41"], ["pressure_after_hardship"]),
+33: ("global", "unsupported_terms", ["decline_unavailable_terms", "only_source_terms"], ["discount", "waiver", "instalment_plan", "invented_terms"]),
+34: ("readback", "valid_draft_bundle", ["product_amount_date_readback", "clear_yes_before_write"], ["unconfirmed_write"]),
+35: ("readback", "date_or_amount_correction", ["invalidate_old_consent", "revalidate", "new_readback_and_confirmation"], ["stale_consent"]),
+36: ("global", "recorded_promise_change_or_cancel", ["one_promise_per_product", "recorded_immutable", "refer_change_to_mobile_app"], ["duplicate_write", "in_call_cancel"]),
+37: ("recording", "promise_tool_result", ["announce_only_ok_true", "one_explicit_retry_on_failure", "second_failure_service_error"], ["announce_before_success", "blind_retry_unknown_result"]),
+38: ("recording", "recorded_promise", ["exact_sms_sentence"], []),
+39: ("negotiation", "paid_this_past_due_amount", ["one_business_day_posting_explanation", "no_new_promise", "resolve_paid"], []),
+40: ("negotiation", "ownership_dispute_or_historic_closed_paid_off", ["do_not_argue", "no_new_promise", "resolve_dispute", "historic_payoff_is_not_current_payment"], []),
+41: ("global", "new_plan_or_lower_instalments", ["transfer_restructuring", "close_transferred_restructuring"], ["describe_new_plan"]),
+42: ("global", "human_request", ["offer_help_once", "insistence_transfer_general", "applies_before_and_after_identity"], ["repeated_help_obstruction"]),
+43: ("global", "scam_question", ["verify_by_bank_customer_service_number", "resume"], ["invented_phone_number"]),
+44: ("global", "unknown_information_question", ["say_information_unavailable"], ["invented_figures_dates_reasons"]),
+45: ("global", "second_dont_want_talk", ["preidentity_not_verified_declined", "postidentity_refused", "human_rule_still_applies"], ["continued_pressure"]),
+46: ("closing", "resolved_outcome", ["exactly_one_close", "reason_where_required", "close_last_bank_operation", "use_outcome_table"], ["postclose_tool"]),
+47: ("closing", "ready_to_close", ["thank_and_goodbye_before_close"], ["goodbye_after_close"]),
+}
+B = {
+1: ("account", "multi_product_snapshot", ["one_to_three_products", "product_local_balances_floors_days_late"], []),
+2: ("disclosure", "valid_snapshot", ["state_every_product_before_any_question", "one_sentence_each"], []),
+3: ("dates", "each_product", ["product_local_band_and_deadline"], ["single_customer_deadline"]),
+4: ("offer", "initial_payment_question", ["ask_all_today_once", "otherwise_api_order", "start_each_at_attempt_one"], ["repeat_today_for_each_product"]),
+5: ("negotiation", "persuasion", ["counter_per_product"], ["shared_product_attempt_budget"]),
+6: ("dates", "common_date", ["cap_late_product_on_own_deadline", "say_adjusted_dates_in_readback", "other_products_keep_valid_common_date"], []),
+7: ("readback", "pending_promises", ["one_bundle_readback", "one_confirmation", "one_write_per_product"], ["per_product_consent_before_bundle"]),
+8: ("closing", "unpromised_products", ["note_each_unpromised_product", "allowed_note_reason", "also_when_no_promises", "defer_until_transfer_is_excluded"], []),
+9: ("negotiation", "product_paid_or_disputed", ["resolve_current_product", "continue_other_products"], ["close_entire_call_early"]),
+10: ("global", "any_transfer", ["recorded_promises_persist", "agreed_unwritten_discarded", "transferred_outcome_wins", "no_notes_before_or_after_transfer"], ["write_after_transfer", "any_note_on_transfer"]),
+11: ("recording", "one_product_fails_twice", ["preserve_successful_promises", "failed_product_service_error_note", "continue_remaining_writes"], []),
+}
+
+PRIORITIES = {"A.32": 100, "A.42": 90, "A.45": 85, "A.41": 80, "A.36": 75,
+              "A.29": 60, "A.30": 40, "A.31": 30}
+OVERLAYS = {"B.1": ["A.16"], "B.2": ["A.17"], "B.3": ["A.18"],
+            "B.4": ["A.28", "A.30"], "B.5": ["A.30", "A.31"], "B.6": ["A.23"],
+            "B.7": ["A.34"], "B.8": ["A.no_notes"], "B.9": ["A.39", "A.40"],
+            "B.10": ["A.41", "A.transfer_precedence"], "B.11": ["A.37"]}

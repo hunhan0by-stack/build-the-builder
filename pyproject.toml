@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "build-the-builder-foundation"
+version = "0.1.0"
+description = "Offline, evidence-linked foundations for generating Freya agents"
+requires-python = ">=3.10"
+dependencies = []
+
+[project.optional-dependencies]
+evidence-protection = ["cryptography==50.0.2"]
+
+[project.scripts]
+builder = "builder.cli:main"
+
+[tool.setuptools.packages.find]
+include = ["builder*"]

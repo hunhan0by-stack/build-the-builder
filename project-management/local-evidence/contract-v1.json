@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "case_id": "PUB-01",
+  "scope": "offline evidence integrity and evaluator-result completeness; not independent policy scoring",
+  "batch_kind": "scripted-local-simulation",
+  "repetitions": [1, 2, 3],
+  "batch_files": ["agent.generated.json", "input-manifest.json", "run-trace.jsonl"],
+  "run_files": ["timeline.jsonl", "transcript.jsonl", "tool-events.jsonl", "initial-state.json", "final-ledger.json", "checks.json"],
+  "required_checks": [
+    "reset", "opening_disclosures", "correct_person", "identity_order",
+    "identity_results", "privacy_before_identity", "account_after_identity",
+    "full_offer", "readback_and_consent", "promise_payload",
+    "single_promise", "honesty_and_sms", "farewell_before_close",
+    "single_final_close", "ledger", "no_external_calls"
+  ],
+  "hash_policy": {
+    "algorithm": "SHA-256",
+    "manifest": "evidence-manifest.json",
+    "report": "report.json",
+    "excluded_from_manifest": ["evidence-manifest.json", "report.json"],
+    "anchor": "Caller supplies the manifest hash recorded separately when the batch was sealed. Never derive the trusted anchor from the report being validated.",
+    "limitation": "Detects changes relative to a trusted anchor. Does not prove authentic execution or protect a compromised anchor."
+  },
+  "report_fields": ["schema_version", "kind", "case_id", "batch_id", "network_calls", "model_calls", "manifest_sha256", "agent_sha256", "status", "runs"],
+  "run_fields": ["repetition", "customer_id", "agent_sha256", "status"],
+  "input_fields": ["schema_version", "contract_sha256", "case_id", "agent_sha256", "plan_version", "simulator_version", "evaluator_version", "sources"],
+  "event_fields": ["seq", "repetition", "elapsed_ms", "kind", "payload"],
+  "event_kinds": ["reset", "message", "tool", "end"],
+  "check_fields": ["check_id", "expected", "actual", "status", "evidence_seq"],
+  "statuses": ["PASS", "FAIL", "ERROR", "NOT_RUN"],
+  "state_fields": ["dob_verified", "phone_verified", "wrong_answers", "consent", "account_read", "promises", "notes", "callbacks", "transfers", "close_count", "closed"],
+  "ledger_fields": ["outcome", "reason", "promises", "notes", "callbacks", "transfers"],
+  "trace_fields": ["seq", "utc", "elapsed_ms", "event", "repetition"],
+  "trace_lifecycle": ["batch_start", "run_start", "run_end", "run_start", "run_end", "run_start", "run_end", "batch_end"]
+}

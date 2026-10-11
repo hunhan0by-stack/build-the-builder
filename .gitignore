@@ -1,0 +1,12 @@
+.freya-local/
+**/env.sh
+**/.env
+**/.env.local
+**/__pycache__/
+artifacts/
+tmp/
+integration/state/
+integration/runs/
+integration/diagnostics/
+data/freya-hackathon/mail-monitor/
+*.dpapi

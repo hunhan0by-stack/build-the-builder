@@ -1,0 +1,2161 @@
+{
+  "kind": "generated-behavior-fixture-1",
+  "brief_sha256": "242bcce4721d7cc24a0a277cdc90ac3e6bc6f0d4653ca19a8608cab9ee4a3410",
+  "tool_api_sha256": "7816f7e7918d8480c557307c3f7cd49050bc75c4d6dd8d52a7de8562792fb858",
+  "cases": [
+    {
+      "name": "memo_cap_and_earliest_date_success",
+      "call_variables": {
+        "customer_id": "offline-synthetic-customer",
+        "current_date": "2026-11-10"
+      },
+      "responses": [
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": false,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": true,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "get_account",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "products": [
+                {
+                  "product_id": "offline-synthetic-card",
+                  "type": "credit_card",
+                  "card_last4": "9027",
+                  "arrears_balance": 410.75,
+                  "days_late": 8,
+                  "required_minimum": 100.25
+                }
+              ]
+            }
+          }
+        },
+        {
+          "operation": "create_promise",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "promise_id": "offline-synthetic-promise"
+            }
+          }
+        },
+        {
+          "operation": "close_call",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true
+            }
+          }
+        }
+      ],
+      "steps": [
+        {
+          "extractions": {},
+          "expect": {
+            "requests": [],
+            "speech_contains": [
+              "Cedar Bank",
+              "recorded"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"4826\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"1984-07-23\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"events\":[{\"intent\":\"proposal\",\"scope\":\"current\",\"amount\":276.35,\"date\":\"2026-11-11\"}]}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [
+              "276.35",
+              "2026-11-11"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"decision\":\"yes\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              },
+              {
+                "operation": "create_promise",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "product_id": "offline-synthetic-card",
+                  "promised_total": 276.35,
+                  "due_on": "2026-11-11"
+                }
+              },
+              {
+                "operation": "close_call",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "outcome": "commitment"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "wrong_recipient_before_identity_discloses_no_account",
+      "call_variables": {
+        "customer_id": "offline-synthetic-customer",
+        "current_date": "2026-11-10"
+      },
+      "responses": [
+        {
+          "operation": "close_call",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true
+            }
+          }
+        }
+      ],
+      "steps": [
+        {
+          "extractions": {},
+          "expect": {
+            "requests": [],
+            "speech_contains": [
+              "Cedar Bank",
+              "recorded"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"interrupt\":\"wrong_recipient\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "close_call",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "outcome": "not_reached",
+                  "reason": "wrong_number"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "declined_joint_confirmation_records_no_promise",
+      "call_variables": {
+        "customer_id": "offline-synthetic-customer",
+        "current_date": "2026-11-10"
+      },
+      "responses": [
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": false,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": true,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "get_account",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "products": [
+                {
+                  "product_id": "offline-synthetic-card",
+                  "type": "credit_card",
+                  "card_last4": "9027",
+                  "arrears_balance": 410.75,
+                  "days_late": 8,
+                  "required_minimum": 100.25
+                }
+              ]
+            }
+          }
+        },
+        {
+          "operation": "close_call",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true
+            }
+          }
+        }
+      ],
+      "steps": [
+        {
+          "extractions": {},
+          "expect": {
+            "requests": [],
+            "speech_contains": [
+              "Cedar Bank",
+              "recorded"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"4826\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"1984-07-23\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"events\":[{\"intent\":\"proposal\",\"scope\":\"current\",\"amount\":276.35,\"date\":\"2026-11-11\"}]}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [
+              "276.35",
+              "2026-11-11"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"decision\":\"no\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              },
+              {
+                "operation": "close_call",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "outcome": "no_promise",
+                  "reason": "refused"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "uncertain_write_has_no_retry_or_duplicate",
+      "call_variables": {
+        "customer_id": "offline-synthetic-customer",
+        "current_date": "2026-11-10"
+      },
+      "responses": [
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": false,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": true,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "get_account",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "products": [
+                {
+                  "product_id": "offline-synthetic-card",
+                  "type": "credit_card",
+                  "card_last4": "9027",
+                  "arrears_balance": 410.75,
+                  "days_late": 8,
+                  "required_minimum": 100.25
+                }
+              ]
+            }
+          }
+        },
+        {
+          "operation": "create_promise",
+          "result": {
+            "status": "error",
+            "status_code": 504,
+            "data": {
+              "ok": false
+            }
+          }
+        },
+        {
+          "operation": "close_call",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true
+            }
+          }
+        }
+      ],
+      "steps": [
+        {
+          "extractions": {},
+          "expect": {
+            "requests": [],
+            "speech_contains": [
+              "Cedar Bank",
+              "recorded"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"4826\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"1984-07-23\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"events\":[{\"intent\":\"proposal\",\"scope\":\"current\",\"amount\":276.35,\"date\":\"2026-11-11\"}]}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [
+              "276.35",
+              "2026-11-11"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"decision\":\"yes\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              },
+              {
+                "operation": "create_promise",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "product_id": "offline-synthetic-card",
+                  "promised_total": 276.35,
+                  "due_on": "2026-11-11"
+                }
+              },
+              {
+                "operation": "close_call",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "outcome": "no_promise",
+                  "reason": "service_error"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "explicit_negative_200_retries_once",
+      "call_variables": {
+        "customer_id": "offline-synthetic-customer",
+        "current_date": "2026-11-10"
+      },
+      "responses": [
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": false,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": true,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "get_account",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "products": [
+                {
+                  "product_id": "offline-synthetic-card",
+                  "type": "credit_card",
+                  "card_last4": "9027",
+                  "arrears_balance": 410.75,
+                  "days_late": 8,
+                  "required_minimum": 100.25
+                }
+              ]
+            }
+          }
+        },
+        {
+          "operation": "create_promise",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": false,
+              "error": "offline-synthetic-definitive-no-write"
+            }
+          }
+        },
+        {
+          "operation": "create_promise",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "promise_id": "offline-synthetic-retry-promise"
+            }
+          }
+        },
+        {
+          "operation": "close_call",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true
+            }
+          }
+        }
+      ],
+      "steps": [
+        {
+          "extractions": {},
+          "expect": {
+            "requests": [],
+            "speech_contains": [
+              "Cedar Bank",
+              "recorded"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"4826\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"1984-07-23\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"events\":[{\"intent\":\"proposal\",\"scope\":\"current\",\"amount\":276.35,\"date\":\"2026-11-11\"}]}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [
+              "276.35",
+              "2026-11-11"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"decision\":\"yes\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              },
+              {
+                "operation": "create_promise",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "product_id": "offline-synthetic-card",
+                  "promised_total": 276.35,
+                  "due_on": "2026-11-11"
+                }
+              },
+              {
+                "operation": "create_promise",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "product_id": "offline-synthetic-card",
+                  "promised_total": 276.35,
+                  "due_on": "2026-11-11"
+                }
+              },
+              {
+                "operation": "close_call",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "outcome": "commitment"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "old_amount_and_date_do_not_write_or_silently_clamp",
+      "call_variables": {
+        "customer_id": "offline-synthetic-customer",
+        "current_date": "2026-11-10"
+      },
+      "responses": [
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": false,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": true,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "get_account",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "products": [
+                {
+                  "product_id": "offline-synthetic-card",
+                  "type": "credit_card",
+                  "card_last4": "9027",
+                  "arrears_balance": 410.75,
+                  "days_late": 8,
+                  "required_minimum": 100.25
+                }
+              ]
+            }
+          }
+        },
+        {
+          "operation": "create_promise",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "promise_id": "offline-synthetic-corrected-promise"
+            }
+          }
+        },
+        {
+          "operation": "close_call",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true
+            }
+          }
+        }
+      ],
+      "steps": [
+        {
+          "extractions": {},
+          "expect": {
+            "requests": [],
+            "speech_contains": [
+              "Cedar Bank",
+              "recorded"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"4826\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"1984-07-23\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"events\":[{\"intent\":\"proposal\",\"scope\":\"current\",\"amount\":310.4,\"date\":\"2026-11-10\"}]}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"events\":[{\"intent\":\"proposal\",\"scope\":\"current\",\"amount\":276.35,\"date\":\"2026-11-11\"}]}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [
+              "276.35",
+              "2026-11-11"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"decision\":\"yes\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              },
+              {
+                "operation": "create_promise",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "product_id": "offline-synthetic-card",
+                  "promised_total": 276.35,
+                  "due_on": "2026-11-11"
+                }
+              },
+              {
+                "operation": "close_call",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "outcome": "commitment"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "continue_consent_is_not_identity_or_payment_consent",
+      "call_variables": {
+        "customer_id": "offline-synthetic-customer",
+        "current_date": "2026-11-10"
+      },
+      "responses": [
+        {
+          "operation": "close_call",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true
+            }
+          }
+        }
+      ],
+      "steps": [
+        {
+          "extractions": {},
+          "expect": {
+            "requests": [],
+            "speech_contains": [
+              "Cedar Bank",
+              "recorded"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"interrupt\":\"inconvenient\"}"
+          },
+          "expect": {
+            "requests": [],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"decision\":\"yes\"}"
+          },
+          "expect": {
+            "requests": [],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"interrupt\":\"wrong_recipient\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "close_call",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "outcome": "not_reached",
+                  "reason": "wrong_number"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "explicit_negative_200_has_at_most_two_attempts",
+      "call_variables": {
+        "customer_id": "offline-synthetic-customer",
+        "current_date": "2026-11-10"
+      },
+      "responses": [
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": false,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": true,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "get_account",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "products": [
+                {
+                  "product_id": "offline-synthetic-card",
+                  "type": "credit_card",
+                  "card_last4": "9027",
+                  "arrears_balance": 410.75,
+                  "days_late": 8,
+                  "required_minimum": 100.25
+                }
+              ]
+            }
+          }
+        },
+        {
+          "operation": "create_promise",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": false
+            }
+          }
+        },
+        {
+          "operation": "create_promise",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": false
+            }
+          }
+        },
+        {
+          "operation": "close_call",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true
+            }
+          }
+        }
+      ],
+      "steps": [
+        {
+          "extractions": {},
+          "expect": {
+            "requests": [],
+            "speech_contains": [
+              "Cedar Bank",
+              "recorded"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"4826\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"1984-07-23\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"events\":[{\"intent\":\"proposal\",\"scope\":\"current\",\"amount\":276.35,\"date\":\"2026-11-11\"}]}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [
+              "276.35",
+              "2026-11-11"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"decision\":\"yes\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              },
+              {
+                "operation": "create_promise",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "product_id": "offline-synthetic-card",
+                  "promised_total": 276.35,
+                  "due_on": "2026-11-11"
+                }
+              },
+              {
+                "operation": "create_promise",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "product_id": "offline-synthetic-card",
+                  "promised_total": 276.35,
+                  "due_on": "2026-11-11"
+                }
+              },
+              {
+                "operation": "close_call",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "outcome": "no_promise",
+                  "reason": "service_error"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "malformed_change_cannot_confirm_previous_readback",
+      "call_variables": {
+        "customer_id": "offline-synthetic-customer",
+        "current_date": "2026-11-10"
+      },
+      "responses": [
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": false,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": true,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "get_account",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "products": [
+                {
+                  "product_id": "offline-synthetic-card",
+                  "type": "credit_card",
+                  "card_last4": "9027",
+                  "arrears_balance": 410.75,
+                  "days_late": 8,
+                  "required_minimum": 100.25
+                }
+              ]
+            }
+          }
+        },
+        {
+          "operation": "create_promise",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "promise_id": "offline-synthetic-renewed-promise"
+            }
+          }
+        },
+        {
+          "operation": "close_call",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true
+            }
+          }
+        }
+      ],
+      "steps": [
+        {
+          "extractions": {},
+          "expect": {
+            "requests": [],
+            "speech_contains": [
+              "Cedar Bank",
+              "recorded"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"4826\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"1984-07-23\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"events\":[{\"intent\":\"proposal\",\"scope\":\"current\",\"amount\":276.35,\"date\":\"2026-11-11\"}]}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [
+              "276.35",
+              "2026-11-11"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"decision\":\"yes\",\"events\":\"malformed\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"decision\":\"yes\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"events\":[{\"intent\":\"proposal\",\"scope\":\"offline-synthetic-card\",\"amount\":276.35,\"date\":\"2026-11-11\"}]}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [
+              "276.35",
+              "2026-11-11"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"decision\":\"yes\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              },
+              {
+                "operation": "create_promise",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "product_id": "offline-synthetic-card",
+                  "promised_total": 276.35,
+                  "due_on": "2026-11-11"
+                }
+              },
+              {
+                "operation": "close_call",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "outcome": "commitment"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": true
+          }
+        }
+      ]
+    },
+    {
+      "name": "top_level_amount_date_change_invalidates_joint_confirmation",
+      "call_variables": {
+        "customer_id": "offline-synthetic-customer",
+        "current_date": "2026-11-10"
+      },
+      "responses": [
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": false,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "verify_identity",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "verified": true,
+              "all_verified": true,
+              "wrong_answers_left": 4
+            }
+          }
+        },
+        {
+          "operation": "get_account",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "products": [
+                {
+                  "product_id": "offline-synthetic-card",
+                  "type": "credit_card",
+                  "card_last4": "9027",
+                  "arrears_balance": 410.75,
+                  "days_late": 8,
+                  "required_minimum": 100.25
+                }
+              ]
+            }
+          }
+        },
+        {
+          "operation": "create_promise",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true,
+              "promise_id": "offline-synthetic-revised-promise"
+            }
+          }
+        },
+        {
+          "operation": "close_call",
+          "result": {
+            "status": "success",
+            "status_code": 200,
+            "data": {
+              "ok": true
+            }
+          }
+        }
+      ],
+      "steps": [
+        {
+          "extractions": {},
+          "expect": {
+            "requests": [],
+            "speech_contains": [
+              "Cedar Bank",
+              "recorded"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"4826\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"identity_answer\":\"1984-07-23\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"events\":[{\"intent\":\"proposal\",\"scope\":\"current\",\"amount\":276.35,\"date\":\"2026-11-11\"}]}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [
+              "276.35",
+              "2026-11-11"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"decision\":\"yes\",\"amount\":200.5,\"date\":\"2026-11-11\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"events\":[{\"intent\":\"change\",\"scope\":\"offline-synthetic-card\",\"amount\":200.5,\"date\":\"2026-11-11\"}]}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              }
+            ],
+            "speech_contains": [
+              "200.5",
+              "2026-11-11"
+            ],
+            "ended": false
+          }
+        },
+        {
+          "extractions": {
+            "speech_event": "{\"decision\":\"yes\"}"
+          },
+          "expect": {
+            "requests": [
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "family_code",
+                  "answer": "4826"
+                }
+              },
+              {
+                "operation": "verify_identity",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "field": "due_on_of_birth",
+                  "answer": "1984-07-23"
+                }
+              },
+              {
+                "operation": "get_account",
+                "body": {
+                  "customer_id": "offline-synthetic-customer"
+                }
+              },
+              {
+                "operation": "create_promise",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "product_id": "offline-synthetic-card",
+                  "promised_total": 200.5,
+                  "due_on": "2026-11-11"
+                }
+              },
+              {
+                "operation": "close_call",
+                "body": {
+                  "customer_id": "offline-synthetic-customer",
+                  "outcome": "commitment"
+                }
+              }
+            ],
+            "speech_contains": [],
+            "ended": true
+          }
+        }
+      ]
+    }
+  ]
+}

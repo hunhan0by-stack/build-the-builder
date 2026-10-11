@@ -1,0 +1,23 @@
+{
+  "version": "2.0",
+  "case_id": "PUB-01",
+  "event_kinds": ["reset", "state", "message", "tool", "end"],
+  "scope": "independent deterministic PUB-01 scripted acceptance and evidence integrity",
+  "batch_kind": "scripted-local-simulation",
+  "repetitions": [1, 2, 3],
+  "source_files": {
+    "sources/public-test-set.json": "public-test-set.json",
+    "sources/bank-openapi.json": "tools/openapi.json",
+    "sources/brief-a.md": "briefs/brief-a.md"
+  },
+  "batch_files": ["agent.generated.json", "input-manifest.json", "run-trace.jsonl", "report.json"],
+  "run_files": ["timeline.jsonl", "transcript.jsonl", "tool-events.jsonl", "initial-state.json", "final-ledger.json", "checks.json"],
+  "required_checks": ["reset", "opening_disclosures", "correct_person", "identity_order", "identity_results", "privacy_before_identity", "account_after_identity", "full_offer", "readback_and_consent", "promise_payload", "single_promise", "honesty_and_sms", "farewell_before_close", "single_final_close", "ledger", "no_external_calls"],
+  "report_fields": ["schema_version", "kind", "case_id", "batch_id", "network_calls", "model_calls", "agent_sha256", "status", "runs"],
+  "input_fields": ["schema_version", "contract_sha256", "case_id", "batch_id", "agent_sha256", "plan_version", "simulator_version", "evaluator_version", "customers"],
+  "run_fields": ["repetition", "customer_id", "agent_sha256", "status"],
+  "check_fields": ["check_id", "expected", "actual", "status", "evidence_seq"],
+  "hash_policy": "Manifest includes report, input metadata, all run artifacts and byte-for-byte official source copies. Manifest excludes only itself. Report contains no manifest hash, preventing a circular hash. Validation requires an independently recorded manifest SHA-256.",
+  "language_scope": "Conservative explicit English PUB-01 scripted phrases. Unsupported paraphrases do not pass. This is not a general LLM conversation judge.",
+  "limits": "No network, models, credentials, live simulation, Freya publication or official competition score. Valid integrity alone does not mean the three runs passed. Anchor compromise or fabricated events cannot be ruled out by hashes."
+}
