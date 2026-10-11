@@ -4,7 +4,7 @@
   "source_files": 183,
   "runtime_files_matched": 98,
   "readme_projection": "README.md contains CONTEST-RUN.md bytes from source_commit",
-  "submission_ref": "faikzade-final-20261011",
+  "submission_ref": "faikzade-final-20261011-v1",
   "original_run_command": "python -B -X utf8 builder/build.py data/final-case/snapshot-20261011T180103Z https://build-the-builder-final-bank.final-bank-worker-scaffold.workers.dev --reference-only test-environment --reference-only example-scenarios.md --reference-only cloudflare-mock/example --allow-partial --assemble-from artifacts/final-builder/final-case-r4-20261011 --assemble-attempt 1 --out artifacts/final-builder/final-case-r4-reassembled-v2-20261011 --budget-seconds 120",
   "reproduction": "Run from repository root with Python and requirements-case-reader.txt installed. The command uses unchanged recorded output and makes zero new model calls. The recorded output directory is intentionally absent in this checkout. For another rerun choose a new --out path; existing outputs are refused.",
   "export_reproduction": "This command reconstructs the local workflow, not a new platform export. The attached platform export and original CLI session are preserved byte-for-byte. Re-publishing would require separately authorized platform credentials.",
@@ -18,8 +18,8 @@
   "limitations_file": "artifacts/final-critical-ready-20261011/HANDOFF.json",
   "attachments": {
     "submission.json": {
-      "bytes": 884,
-      "sha256": "cf8e213db463c14f7db1f4accca2ccd053ba6226a8250c7104948511a8593de6"
+      "bytes": 809,
+      "sha256": "094d8aa6a95c9147541cf645e7e0eb326366b517ea0bb633f7378aa12a11b282"
     },
     "submission/workflow.export.json": {
       "bytes": 141413,
@@ -33,6 +33,8 @@
   "publication_authorization": {
     "user_message_id": "01a12c64-7f5d-73c3-a912-d94d167f0e48",
     "verified_in_thread": "01a125bd-9132-7d13-b7fb-7f5fa0a42c88",
-    "email_sender": "Manager thread only"
-  }
+    "email_sender": "Manager thread only",
+    "expanded_public_payload_approval": "PENDING_AFTER_AUTO_REVIEW_REJECTION"
+  },
+  "parameterized_run_command": "python -B -X utf8 builder/build.py {case_folder} {mock_url} --reference-only test-environment --reference-only example-scenarios.md --reference-only cloudflare-mock/example --allow-partial --assemble-from artifacts/final-builder/final-case-r4-20261011 --assemble-attempt 1 --out artifacts/final-builder/final-case-r4-reassembled-v2-20261011 --budget-seconds 120"
 }

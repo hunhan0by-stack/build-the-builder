@@ -7,8 +7,8 @@
     }
   ],
   "repo": "https://github.com/hunhan0by-stack/build-the-builder",
-  "commit": "faikzade-final-20261011",
-  "run_command": "python -B -X utf8 builder/build.py data/final-case/snapshot-20261011T180103Z https://build-the-builder-final-bank.final-bank-worker-scaffold.workers.dev --reference-only test-environment --reference-only example-scenarios.md --reference-only cloudflare-mock/example --allow-partial --assemble-from artifacts/final-builder/final-case-r4-20261011 --assemble-attempt 1 --out artifacts/final-builder/final-case-r4-reassembled-v2-20261011 --budget-seconds 120",
+  "commit": "faikzade-final-20261011-v1",
+  "run_command": "python -B -X utf8 builder/build.py {case_folder} {mock_url} --reference-only test-environment --reference-only example-scenarios.md --reference-only cloudflare-mock/example --allow-partial --assemble-from artifacts/final-builder/final-case-r4-20261011 --assemble-attempt 1 --out artifacts/final-builder/final-case-r4-reassembled-v2-20261011 --budget-seconds 120",
   "workflow": "submission/workflow.export.json",
   "trace": "submission/trace.txt",
   "mock_url": "https://build-the-builder-final-bank.final-bank-worker-scaffold.workers.dev"
